@@ -1,0 +1,45 @@
+{
+  "name": "uploadaura-sdk",
+  "version": "0.1.0",
+  "description": "a uploader to s3 wrapper that lets you upload files from backend without any jargons just install the sdk setup apikey and ready to go , you get 2GB storage free ",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "uploadaura",
+    "uploadit",
+    "uploadS3wrapper"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "form-data": "^4.0.6"
+  },
+  "license": "ISC",
+  "author": "muhammadyaqoob",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@types/form-data": "^2.2.1",
+    "@types/node": "^26.0.1",
+    "@types/node-fetch": "^2.6.13",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}

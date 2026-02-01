@@ -1,0 +1,79 @@
+{
+  "compilerOptions": {
+    // The JS version your TS compiles to. ES2020 gives you
+    // optional chaining (?.), nullish coalescing (??), BigInt.
+    // Don't go lower unless supporting ancient Node.
+    "target": "ES2020",
+
+    // How import/export statements are compiled.
+    // NodeNext = Node's new ESM-aware resolution. Respects
+    // "exports" in package.json. Best for modern Node SDKs.
+    "module": "NodeNext",
+
+    // Paired with module: NodeNext. Tells TS how to resolve
+    // imports — follows Node's actual algorithm.
+    "moduleResolution": "NodeNext",
+
+    // Where tsc puts compiled files. tsup uses dist/ too.
+    "outDir": "./dist",
+
+    // Generate .d.ts declaration files (the types consumers get)
+    "declaration": true,
+
+    // Generate .d.ts.map files — lets consumers Cmd+Click into
+    // your actual .ts source code from their IDE
+    "declarationMap": true,
+
+    // Generate .js.map source maps — lets consumers debug into
+    // your source if something breaks
+    "sourceMap": true,
+
+    // ── TYPE SAFETY ──────────────────────────────────────────
+
+    // Enables all strict type checks below. Always on.
+    "strict": true,
+
+    // Catch when you access array[i] without checking it exists
+    "noUncheckedIndexedAccess": true,
+
+    // Error if you import something but never use it
+    "noUnusedLocals": true,
+
+    // Error if a function param is declared but never used
+    "noUnusedParameters": true,
+
+    // Error if a function has code paths that don't return
+    "noImplicitReturns": true,
+
+    // ── INTEROP ──────────────────────────────────────────────
+
+    // Lets you do: import fetch from 'node-fetch'
+    // instead of: import * as fetch from 'node-fetch'
+    "esModuleInterop": true,
+
+    // Makes interop consistent regardless of which bundler is used
+    "allowSyntheticDefaultImports": true,
+
+    // Lets you import .json files as modules
+    "resolveJsonModule": true,
+
+    // ── ENVIRONMENT ──────────────────────────────────────────
+
+    // Type definitions to include. node = all Node.js globals.
+    "lib": ["ES2020"],
+
+    // Which global types to load. node gives you Buffer, process,
+    // __dirname, fetch (Node 18+), FormData, etc.
+    "types": ["node"],
+
+    // Tell TS this is NOT a browser. Removes DOM globals like
+    // window, document. You're writing a Node.js SDK.
+    "skipLibCheck": true,
+  },
+
+  // Which files tsc compiles
+  "include": ["src"],
+
+  // Which files/folders tsc ignores
+  "exclude": ["node_modules", "dist"],
+}
