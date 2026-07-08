@@ -270,121 +270,149 @@ export default function AnalyticsPage() {
       {/* ── Summary cards ── */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Skeleton className="h-27" />
-          <Skeleton className="h-27" />
-          <Skeleton className="h-27" />
+          <Skeleton className="h-[130px]" />
+          <Skeleton className="h-[130px]" />
+          <Skeleton className="h-[130px]" />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Files uploaded */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span
-                className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                style={{ background: "var(--color-accent-light)" }}
-              >
-                <Upload size={15} style={{ color: "var(--color-accent)" }} />
-              </span>
-              <span
-                className="text-[13px]"
-                style={{ color: "var(--color-ink-muted)" }}
-              >
-                Files Uploaded
-              </span>
+          {/* ── Files uploaded ── */}
+          <motion.div
+            className="card stat-card-dots relative overflow-hidden p-5"
+            initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: 0 }}
+          >
+            {/* Top accent bar */}
+            <div className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,var(--color-accent)_0%,rgba(255,96,61,0.15)_100%)]" />
+            <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-(--color-accent-light)">
+              <Upload
+                size={18}
+                className="text-(--color-accent)"
+                aria-hidden="true"
+              />
             </div>
-            <p
-              className="text-[28px] font-semibold tracking-[-0.02em]"
-              style={{
-                color: "var(--color-ink)",
-                fontVariantNumeric: "tabular-nums",
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-(--color-ink-faint) mb-1.5">
+              Files Uploaded
+            </p>
+            <motion.p
+              className="text-[38px] font-bold tracking-[-0.03em] text-(--color-ink) tabular-nums leading-none"
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.1,
               }}
             >
               {data?.totalUploadedFilesForPeriod ?? 0}
-            </p>
-            <p
-              className="text-[12px] mt-0.5"
-              style={{ color: "var(--color-ink-faint)" }}
-            >
+            </motion.p>
+            <p className="mt-2 text-[12px] text-(--color-ink-muted)">
               in selected period
             </p>
-          </div>
+          </motion.div>
 
-          {/* Data transferred */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span
-                className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                style={{ background: "var(--color-accent-light)" }}
-              >
-                <TrendingUp
-                  size={15}
-                  style={{ color: "var(--color-accent)" }}
-                />
-              </span>
-              <span
-                className="text-[13px]"
-                style={{ color: "var(--color-ink-muted)" }}
-              >
-                Data Transferred
-              </span>
+          {/* ── Data transferred ── */}
+          <motion.div
+            className="card stat-card-dots relative overflow-hidden p-5"
+            initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.45,
+              ease: [0.16, 1, 0.3, 1],
+              delay: 0.08,
+            }}
+          >
+            <div className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,var(--color-accent)_0%,rgba(255,96,61,0.15)_100%)]" />
+            <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-(--color-accent-light)">
+              <TrendingUp
+                size={18}
+                className="text-(--color-accent)"
+                aria-hidden="true"
+              />
             </div>
-            <p
-              className="text-[28px] font-semibold tracking-[-0.02em]"
-              style={{
-                color: "var(--color-ink)",
-                fontVariantNumeric: "tabular-nums",
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-(--color-ink-faint) mb-1.5">
+              Data Transferred
+            </p>
+            <motion.p
+              className="text-[38px] font-bold tracking-[-0.03em] text-(--color-ink) tabular-nums leading-none"
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.18,
               }}
             >
               {data?.totalUsagesForPeriod ?? "0 B"}
-            </p>
-            <p
-              className="text-[12px] mt-0.5"
-              style={{ color: "var(--color-ink-faint)" }}
-            >
+            </motion.p>
+            <p className="mt-2 text-[12px] text-(--color-ink-muted)">
               in selected period
             </p>
-          </div>
+          </motion.div>
 
-          {/* Storage used */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span
-                className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                style={{ background: "var(--color-accent-light)" }}
-              >
-                <HardDrive size={15} style={{ color: "var(--color-accent)" }} />
-              </span>
-              <span
-                className="text-[13px]"
-                style={{ color: "var(--color-ink-muted)" }}
-              >
-                Storage Used
-              </span>
-            </div>
-            <p
-              className="font-semibold tracking-[-0.02em] leading-none"
+          {/* ── Storage used ── */}
+          <motion.div
+            className="card stat-card-dots relative overflow-hidden p-5"
+            initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.45,
+              ease: [0.16, 1, 0.3, 1],
+              delay: 0.16,
+            }}
+          >
+            <div
+              className="absolute inset-x-0 top-0 h-[3px]"
               style={{
-                color: "var(--color-ink)",
-                fontVariantNumeric: "tabular-nums",
-                fontSize: "clamp(18px, 3vw, 26px)",
+                background: `linear-gradient(90deg, ${storageColor} 0%, transparent 100%)`,
+              }}
+            />
+            <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-(--color-accent-light)">
+              <HardDrive
+                size={18}
+                className="text-(--color-accent)"
+                aria-hidden="true"
+              />
+            </div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-(--color-ink-faint) mb-1.5">
+              Storage Used
+            </p>
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.26,
               }}
             >
-              {summary?.formattedTotalUsage ?? "0 B"}
-              <span
-                className="font-normal"
-                style={{ color: "var(--color-ink-muted)", fontSize: "15px" }}
+              <p
+                className="text-[28px] font-bold tracking-[-0.03em] leading-none tabular-nums"
+                style={{ color: storageColor }}
               >
-                {" "}
-                / {summary?.formattedQuota ?? "—"}
-              </span>
-            </p>
-            <p
-              className="text-[12px] mt-1.5"
-              style={{ color: "var(--color-ink-faint)" }}
-            >
-              {pct}% used
-            </p>
-          </div>
+                {pct}%
+              </p>
+              <p className="mt-1 text-[12px] text-(--color-ink-muted) tabular-nums">
+                {summary?.formattedTotalUsage ?? "0 B"} /{" "}
+                {summary?.formattedQuota ?? "2 GB"}
+              </p>
+            </motion.div>
+            {/* Mini progress bar */}
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-(--color-surface-3)">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ backgroundColor: storageColor }}
+                initial={{ width: 0 }}
+                animate={{ width: `${pct}%` }}
+                transition={{
+                  duration: 0.9,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.3,
+                }}
+              />
+            </div>
+          </motion.div>
         </div>
       )}
 

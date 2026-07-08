@@ -1,330 +1,188 @@
 "use client";
 
-import { useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "framer-motion";
-import { ArrowRight, Upload, Zap } from "lucide-react";
-
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const copyVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-};
-
-const STATS = [
-  { value: "2 GB", label: "Free storage" },
-  { value: "100 MB", label: "Per-file limit" },
-  { value: "REST", label: "API-first" },
-] as const;
+import { motion } from "framer-motion";
 
 export function Hero() {
-  const shouldReduceMotion = useReducedMotion();
-  const heroRef = useRef<HTMLElement>(null);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
 
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const bgY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    shouldReduceMotion ? [0, 0] : [0, 60],
-  );
-
-  const imgY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    shouldReduceMotion ? [0, 0] : [0, -32],
-  );
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8 },
+    },
+  };
 
   return (
-    <section
-      ref={heroRef}
-      className="relative overflow-hidden"
-      aria-label="Hero"
-      style={{ minHeight: "100vh" }}
-    >
-      {/* ── Background image with parallax - ZOOMED IN ── */}
+    <section className="min-h-screen flex items-center justify-center pt-20 pb-20 px-6">
       <motion.div
-        aria-hidden="true"
-        className="absolute z-0"
-        style={{ 
-          y: bgY,
-          top: "-15%",
-          left: "-15%",
-          right: "-15%",
-          bottom: "-15%",
-        }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="max-w-4xl mx-auto text-center"
       >
-        <Image
-          src="/uploadAura.png"
-          alt=""
-          fill
-          priority
-          quality={95}
-          className="object-cover object-center"
-          sizes="130vw"
-        />
-      </motion.div>
-
-      {/* ── Minimal overlay — only fade at bottom for section transition ── */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 0%, transparent 70%, rgba(253,253,253,0.6) 88%, rgba(253,253,253,1) 100%)",
-        }}
-      />
-
-      {/* ── Content ── */}
-      <div className="relative z-20 flex flex-col items-center text-center">
-        {/* Top copy */}
-        <motion.div
-          variants={copyVariants}
-          initial={shouldReduceMotion ? false : "hidden"}
-          animate="visible"
-          className="flex flex-col items-center px-6 pt-32 pb-0"
-          style={{ maxWidth: "900px", margin: "0 auto" }}
-        >
-          {/* Eyebrow badge */}
-          <motion.div variants={itemVariants}>
-            <span
-              className="inline-flex items-center gap-1.5 mb-6 px-3 py-1 rounded-full text-[12px] font-medium tracking-wide"
-              style={{
-                background: "rgba(255,255,255,0.82)",
-                border: "1px solid var(--color-border)",
-                color: "var(--color-ink-muted)",
-                backdropFilter: "blur(8px)",
-                boxShadow:
-                  "0 1px 3px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9)",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-              }}
-            >
-              <Zap
-                size={11}
-                strokeWidth={2.5}
-                style={{ color: "var(--color-accent)" }}
-              />
-              Simple Cloud Storage API
+        {/* Main Headline */}
+        <motion.div variants={itemVariants} className="mb-8">
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+            One{" "}
+            <span className="inline-block">
+              <motion.span
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="inline-block mr-2"
+              >
+                🔑
+              </motion.span>
             </span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            variants={itemVariants}
-            className="font-bold leading-[1.04] tracking-tight"
-            style={{
-              fontSize: "clamp(2.75rem, 6.5vw, 5rem)",
-              letterSpacing: "-0.035em",
-              color: "var(--color-ink)",
-              textShadow: "0 1px 2px rgba(255,255,255,0.9), 0 2px 8px rgba(255,255,255,0.7)",
-            }}
-          >
-            Upload anything.
-            <br />
-            <span
-              style={{
-                color: "var(--color-ink-2)",
-                fontWeight: 700,
-              }}
-            >
-              Skip the infrastructure.
-            </span>
-          </motion.h1>
-
-          {/* Subheading */}
-          <motion.p
-            variants={itemVariants}
-            className="mt-6 leading-relaxed"
-            style={{
-              fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
-              color: "var(--color-ink-muted)",
-              maxWidth: "52ch",
-              fontWeight: 400,
-              textShadow: "0 1px 3px rgba(255,255,255,0.8)",
-            }}
-          >
-            Skip AWS S3 buckets, IAM policies, and endless configuration.
-            UploadAura gives you an API key and a clean dashboard — ship your
-            product in minutes.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            variants={itemVariants}
-            className="mt-9 flex flex-wrap items-center justify-center gap-3"
-          >
-            <Link href="/register" className="btn-primary !px-5 !py-2.5 !text-[14px] !font-semibold">
-              Start for free
-              <ArrowRight size={14} strokeWidth={2} />
-            </Link>
-            <a
-              href="#how-it-works"
-              className="btn-secondary !px-5 !py-2.5 !text-[14px] !font-medium"
-            >
-              See how it works
-            </a>
-          </motion.div>
+            key. Every file on{" "}
+            <span className="text-gray-400">S3</span>.
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Cargo puts a single API and SDK in front of Amazon S3 — upload, store, and serve files without ever opening
+            the AWS console.
+          </p>
         </motion.div>
 
-        {/* ── Product screenshot ── */}
+        {/* CTA Buttons */}
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <button className="btn-primary px-8 py-3 text-lg">Get API key →</button>
+          <button className="btn-secondary px-8 py-3 text-lg">See what ships</button>
+        </motion.div>
+
+        {/* Live Upload Demo */}
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 0.45 }}
-          style={{ y: imgY }}
-          className="relative w-full mt-16 px-4 sm:px-8 lg:px-16"
+          variants={itemVariants}
+          className="rounded-xl border border-gray-200 overflow-hidden bg-white shadow-lg"
         >
-          <div
-            className="relative mx-auto"
-            style={{ maxWidth: "1040px" }}
-          >
-            {/* Browser chrome mockup */}
-            <div
-              style={{
-                background: "var(--color-surface-2)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-xl)",
-                boxShadow:
-                  "0 0 0 1px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.06), 0 32px 64px rgba(0,0,0,0.1), 0 64px 96px rgba(0,0,0,0.06)",
-                overflow: "hidden",
-              }}
-            >
-              {/* Title bar */}
-              <div
-                className="flex items-center gap-2 px-4"
-                style={{
-                  height: "36px",
-                  background: "var(--color-surface-3)",
-                  borderBottom: "1px solid var(--color-border)",
-                }}
-              >
-                <span
-                  className="flex gap-1.5 items-center"
-                  aria-hidden="true"
-                >
-                  {["#d0d0cc", "#d0d0cc", "#d0d0cc"].map((c, i) => (
-                    <span
+          <div className="bg-gray-50 border-b border-gray-200 px-6 py-4">
+            <p className="text-sm font-semibold text-gray-900">app.cargo.dev/dashboard</p>
+          </div>
+
+          <div className="p-8">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left: Recent Files */}
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 mb-4">Recent files</h3>
+                <div className="space-y-3">
+                  {[
+                    { icon: "IMG", name: "hero-banner.png" },
+                    { icon: "PDF", name: "invoice-q3.pdf" },
+                    { icon: "MP4", name: "product-demo.mp4" },
+                    { icon: "ZIP", name: "assets-v2.zip" },
+                    { icon: "JS", name: "build.js" },
+                    { icon: "CSV", name: "users.csv" },
+                  ].map((file, i) => (
+                    <motion.div
                       key={i}
-                      style={{
-                        width: "10px",
-                        height: "10px",
-                        borderRadius: "50%",
-                        background: c,
-                        display: "block",
-                      }}
-                    />
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 + i * 0.05 }}
+                      className="flex items-center gap-3 text-sm"
+                    >
+                      <span className="bg-gray-100 w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-gray-600">
+                        {file.icon}
+                      </span>
+                      <span className="text-gray-600">{file.name}</span>
+                    </motion.div>
                   ))}
-                </span>
-                <span
-                  className="flex-1 mx-4"
-                  style={{
-                    height: "20px",
-                    background: "var(--color-surface-2)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                  }}
-                />
-              </div>
-
-              {/* Screenshot */}
-              <div
-                style={{
-                  aspectRatio: "16/9",
-                  position: "relative",
-                  background: "var(--color-surface)",
-                }}
-              >
-                <Image
-                  src="/aa.png"
-                  alt="UploadAura dashboard — file manager interface"
-                  fill
-                  quality={95}
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 100vw, 1040px"
-                />
-              </div>
-            </div>
-
-            {/* Reflection/glow beneath screenshot */}
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                bottom: "-40px",
-                left: "10%",
-                right: "10%",
-                height: "80px",
-                background:
-                  "radial-gradient(ellipse at center, rgba(0,0,0,0.08) 0%, transparent 70%)",
-                filter: "blur(12px)",
-                pointerEvents: "none",
-              }}
-            />
-          </div>
-        </motion.div>
-
-        {/* ── Stats strip ── */}
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.75 }}
-          className="relative z-10 flex flex-wrap items-center justify-center gap-0 mt-16 mb-0 w-full"
-          style={{ background: "var(--color-surface)" }}
-        >
-          <div
-            className="w-full"
-            style={{
-              borderTop: "1px solid var(--color-border)",
-              borderBottom: "1px solid var(--color-border)",
-            }}
-          >
-            <div className="mx-auto max-w-3xl flex items-stretch divide-x divide-[var(--color-border)]">
-              {STATS.map((s) => (
-                <div
-                  key={s.value}
-                  className="flex-1 flex flex-col items-center justify-center gap-1 py-6 px-4"
-                >
-                  <span
-                    className="font-bold leading-none tracking-tight"
-                    style={{
-                      fontSize: "1.5rem",
-                      color: "var(--color-ink)",
-                      fontFamily: "var(--font-mono)",
-                    }}
-                  >
-                    {s.value}
-                  </span>
-                  <span
-                    className="text-[12px] uppercase tracking-widest"
-                    style={{ color: "var(--color-ink-faint)", letterSpacing: "0.08em" }}
-                  >
-                    {s.label}
-                  </span>
                 </div>
-              ))}
+              </div>
+
+              {/* Right: Upload Status & Stats */}
+              <div className="space-y-8">
+                {/* Upload Status */}
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900 mb-3">Uploading to S3</h3>
+                  <p className="text-xs text-gray-500 mb-3">2.3s · 1.4 MB/s</p>
+
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-gray-700">hero-banner.png</span>
+                        <span className="text-xs text-gray-500">78%</span>
+                      </div>
+                      <motion.div
+                        className="h-2 bg-gray-200 rounded-full overflow-hidden"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 2, delay: 0.5 }}
+                      >
+                        <motion.div
+                          className="h-full bg-black"
+                          initial={{ width: "0%" }}
+                          animate={{ width: "78%" }}
+                          transition={{ duration: 2, delay: 0.5 }}
+                        />
+                      </motion.div>
+                    </div>
+
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 1.2 }}
+                      className="bg-gray-50 p-3 rounded border border-gray-200 mt-4"
+                    >
+                      <p className="text-xs text-gray-500 mb-2">https://cdn.cargo.dev/hero-banner.png</p>
+                      <p className="text-xs font-semibold text-gray-900">COPY</p>
+                    </motion.div>
+                  </div>
+
+                  {/* Code snippet */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.5 }}
+                    className="bg-gray-900 text-gray-100 p-3 rounded mt-4 text-left font-mono text-xs"
+                  >
+                    <p>// Upload with the Cargo SDK</p>
+                    <p className="text-blue-400">const</p>
+                    <p>
+                      file = <span className="text-blue-400">await</span> cargo.upload(
+                      <span className="text-green-400">'./banner.png'</span>);
+                    </p>
+                    <p>console.log(file.url);</p>
+                    <p className="text-gray-500">// → https://cdn.cargo.dev/hero-banner.png</p>
+                  </motion.div>
+                </div>
+
+                {/* Stats */}
+                <div className="pt-4 border-t border-gray-200">
+                  <h3 className="text-sm font-bold text-gray-900 mb-4">This month</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { label: "Storage used", value: "1.24 / 2 GB" },
+                      { label: "Files uploaded", value: "1,284" },
+                      { label: "Bandwidth", value: "18.7GB" },
+                      { label: "API calls", value: "42.1k" },
+                    ].map((stat, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.8 + i * 0.1 }}
+                        className="text-left"
+                      >
+                        <p className="text-xs text-gray-500 mb-1">{stat.label}</p>
+                        <p className="text-sm font-bold text-gray-900">{stat.value}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

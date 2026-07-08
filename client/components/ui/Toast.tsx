@@ -35,6 +35,27 @@ const ICONS: Record<ToastType, React.ReactNode> = {
   info:    <Info size={16} aria-hidden="true" />,
 };
 
+function ToastIcon({ type }: { type: ToastType }) {
+  if (type === 'success') {
+    return (
+      <motion.span
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 15,
+        }}
+        className="shrink-0"
+      >
+        <CheckCircle size={16} aria-hidden="true" />
+      </motion.span>
+    );
+  }
+  
+  return <span className="shrink-0">{ICONS[type]}</span>;
+}
+
 const COLORS: Record<ToastType, { icon: string; border: string; bg: string }> = {
   success: { icon: "text-[var(--color-success)]",  border: "border-[var(--color-success)]/20", bg: "bg-[var(--color-success-light)]" },
   error:   { icon: "text-[var(--color-error)]",    border: "border-[var(--color-error)]/20",   bg: "bg-[var(--color-error-light)]"   },
@@ -83,13 +104,24 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               <motion.div
                 key={t.id}
                 layout
-                initial={{ opacity: 0, x: 48, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 48, scale: 0.95 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 20, x: 48, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+                exit={{ 
+                  opacity: 0, 
+                  x: 48, 
+                  scale: 0.92,
+                  transition: { duration: 0.18 }
+                }}
+                transition={{ 
+                  duration: 0.32, 
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.15 } }}
                 className={`pointer-events-auto flex items-start gap-3 rounded-[var(--radius-lg)] border px-4 py-3 shadow-lg min-w-[260px] max-w-[340px] ${c.bg} ${c.border}`}
               >
-                <span className={`mt-0.5 shrink-0 ${c.icon}`}>{ICONS[t.type]}</span>
+                <span className={`mt-0.5 ${c.icon}`}>
+                  <ToastIcon type={t.type} />
+                </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] font-medium text-[var(--color-ink)] leading-snug">
                     {t.title}

@@ -1,65 +1,88 @@
-export function cn(...classes: (string | undefined | null | false)[]): string {
-  return classes.filter(Boolean).join(" ");
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
 
-export function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(iso));
+/**
+ * Formats a date string into a human-readable format.
+ * e.g. "Jun 30, 2026"
+ */
+export function formatDate(dateString: string): string {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
 }
 
-export function formatDateTime(iso: string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(new Date(iso));
+/**
+ * Returns storage usage as a 0–100 percentage, clamped.
+ */
+export function storagePercent(usedBytes: number, quotaBytes: number): number {
+  if (!quotaBytes || quotaBytes <= 0) return 0;
+  return Math.min(100, Math.round((usedBytes / quotaBytes) * 100));
 }
 
-export function getFileIcon(ext: string, mimeType: string): string {
-  if (mimeType.startsWith("image/")) return "image";
-  if (mimeType.startsWith("video/")) return "video";
-  if (mimeType.startsWith("audio/")) return "audio";
-  if (mimeType === "application/pdf") return "pdf";
-  if (ext === "doc" || ext === "docx" || mimeType.includes("word"))
-    return "word";
-  if (
-    ext === "xls" ||
-    ext === "xlsx" ||
-    mimeType.includes("spreadsheet") ||
-    mimeType.includes("excel")
-  )
-    return "spreadsheet";
-  if (ext === "pptx" || mimeType.includes("presentation"))
-    return "presentation";
-  if (
-    ext === "zip" ||
-    ext === "tar" ||
-    mimeType.includes("zip") ||
-    mimeType.includes("tar")
-  )
-    return "archive";
-  if (ext === "csv" || mimeType === "text/csv") return "csv";
-  if (ext === "txt" || mimeType === "text/plain") return "text";
-  return "file";
+/**
+ * Formats a Date as a YYYY-MM-DD string (local time).
+ */
+export function toISODate(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
-export function storagePercent(used: number, quota: number): number {
-  if (quota === 0) return 0;
-  return Math.min(100, Math.round((used / quota) * 100));
-}
-
-// Date helpers for analytics
-export function toISODate(d: Date): string {
-  return d.toISOString().slice(0, 10);
-}
-
-export function subtractDays(d: Date, days: number): Date {
-  const result = new Date(d);
+/**
+ * Returns a new Date that is `days` days before the given date.
+ */
+export function subtractDays(date: Date, days: number): Date {
+  const result = new Date(date);
   result.setDate(result.getDate() - days);
   return result;
+}
+
+/**
+ * Returns a semantic file type key based on extension and mime type.
+ * Used to pick the right icon in FileList.
+ */
+export function getFileIcon(ext: string, mimeType: string): string {
+  const e = (ext || "").toLowerCase().replace(/^\./, "");
+  const m = (mimeType || "").toLowerCase();
+
+  if (m.startsWith("image/")) return "image";
+  if (m.startsWith("video/")) return "video";
+  if (m.startsWith("audio/")) return "audio";
+  if (e === "pdf" || m === "application/pdf") return "pdf";
+  if (["doc", "docx"].includes(e) || m.includes("word")) return "word";
+  if (
+    ["xls", "xlsx"].includes(e) ||
+    m.includes("spreadsheet") ||
+    m.includes("excel")
+  )
+    return "spreadsheet";
+  if (
+    ["ppt", "pptx"].includes(e) ||
+    m.includes("presentation") ||
+    m.includes("powerpoint")
+  )
+    return "presentation";
+  if (
+    ["zip", "rar", "7z", "tar", "gz", "bz2"].includes(e) ||
+    m.includes("zip") ||
+    m.includes("archive") ||
+    m.includes("compressed")
+  )
+    return "archive";
+  if (e === "csv" || m === "text/csv") return "csv";
+  if (["txt", "md", "log", "rtf"].includes(e) || m.startsWith("text/"))
+    return "text";
+  return "file";
 }

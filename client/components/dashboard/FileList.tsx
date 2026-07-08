@@ -15,6 +15,7 @@ import {
   Presentation,
   Search,
   Trash2,
+  Upload,
   Video,
 } from "lucide-react";
 import {
@@ -29,6 +30,8 @@ import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
 import { cn, formatDate, getFileIcon } from "@/lib/utils";
+import { useSound } from "@/hooks/useSound";
+import { confirmation001Sound } from "@/lib/confirmation-001";
 import Link from "next/link";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -164,23 +167,79 @@ function EmptyState({ filtered }: { filtered: boolean }) {
     <tr>
       <td colSpan={8}>
         <div className="flex flex-col items-center gap-3 py-16 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface-2)]">
-            <File
-              size={22}
-              className="text-[var(--color-ink-faint)]"
-              aria-hidden="true"
-            />
-          </div>
-          <div>
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 0.1,
+            }}
+            className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-surface-2)]"
+          >
+            {!filtered && (
+              <>
+                {/* Animated upload arrow */}
+                <motion.div
+                  animate={{
+                    y: [0, -4, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Upload
+                    size={24}
+                    className="text-[var(--color-accent)]"
+                    aria-hidden="true"
+                  />
+                </motion.div>
+
+                {/* Pulsing ring */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [0.4, 0, 0.4],
+                  }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                  }}
+                  className="absolute inset-0 rounded-full border-2 border-[var(--color-accent)]"
+                  aria-hidden="true"
+                />
+              </>
+            )}
+
+            {filtered && (
+              <File
+                size={24}
+                className="text-[var(--color-ink-faint)]"
+                aria-hidden="true"
+              />
+            )}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+          >
             <p className="text-[14px] font-medium text-[var(--color-ink)]">
-              {filtered ? "No files match your search" : "No files yet"}
+              {filtered
+                ? "No files match your search"
+                : "Your canvas awaits ✨"}
             </p>
             <p className="mt-0.5 text-[12px] text-[var(--color-ink-faint)]">
               {filtered
                 ? "Try a different keyword."
-                : "Upload your first file using the zone above."}
+                : "Upload your first file to get started. It takes seconds."}
             </p>
-          </div>
+          </motion.div>
         </div>
       </td>
     </tr>
@@ -196,6 +255,7 @@ interface FileListProps {
 
 export function FileList({ refreshTrigger = 0 }: FileListProps) {
   const toast = useToast();
+  const playDeleteSound = useSound(confirmation001Sound, 0.65);
 
   // ── Data state ──────────────────────────────────────────────
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -337,6 +397,7 @@ export function FileList({ refreshTrigger = 0 }: FileListProps) {
     setDeleting(true);
     try {
       const res = await deleteFiles(deleteTarget);
+      playDeleteSound();
       toast.success(
         `${res.deletedCount} file${res.deletedCount !== 1 ? "s" : ""} deleted`,
         res.failedCount > 0
@@ -498,12 +559,13 @@ export function FileList({ refreshTrigger = 0 }: FileListProps) {
                   return (
                     <motion.tr
                       key={file._id}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, x: -20, scale: 0.97 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: 20, scale: 0.97 }}
                       transition={{
-                        delay: i * 0.035,
-                        duration: 0.18,
-                        ease: "easeOut",
+                        delay: i * 0.04,
+                        duration: 0.35,
+                        ease: [0.16, 1, 0.3, 1],
                       }}
                       className={cn(
                         "group border-b border-[var(--color-border)] transition-colors duration-75",

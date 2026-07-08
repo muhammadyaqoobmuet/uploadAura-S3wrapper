@@ -1,196 +1,133 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { HardDrive, Layers, Code2, BarChart2, Eye, Share2 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
-interface Feature {
-  title: string;
-  description: string;
-  Icon: LucideIcon;
-}
-
-const FEATURES: Feature[] = [
+const features = [
   {
-    title: "2 GB Free Storage",
-    description:
-      "Upload up to 2 GB across unlimited files. A generous free tier with no hidden limits or credit card required.",
-    Icon: HardDrive,
+    number: "01",
+    title: "STORAGE",
+    description: "2GB",
+    details: "Free forever · No card needed",
+    long: "Room to build - Unlimited files across the free tier, backed by S3. Nothing you upload is ever quietly deleted.",
+    icon: "💾",
   },
   {
-    title: "Bulk Operations",
-    description:
-      "Select and download or delete multiple files at once. Manage your entire library at scale without tedious one-by-one actions.",
-    Icon: Layers,
+    number: "02",
+    title: "SDK",
+    description: "Typed clients, one shape",
+    details: "Same method names and response types across every language.",
+    long: "Node, Python, Go",
+    icon: "📦",
   },
   {
-    title: "Developer API",
-    description:
-      "Generate API keys and integrate file uploads into any app in minutes. Clean REST endpoints, clear docs.",
-    Icon: Code2,
+    number: "03",
+    title: "API",
+    description: "Plain REST, no gymnastics",
+    details: "Skip signed URLs and bucket policy JSON — just call endpoints.",
+    long: "POST/v2/files/upload · GET/v2/files/:id",
+    icon: "🔌",
   },
   {
-    title: "Real-time Analytics",
-    description:
-      "Storage breakdowns and usage charts that stay in sync as your files change. Always know where you stand.",
-    Icon: BarChart2,
+    number: "04",
+    title: "Instant URLs",
+    description: "Every file gets a permanent link the moment it lands.",
+    icon: "🔗",
   },
   {
-    title: "Inline Previews",
-    description:
-      "Images, PDFs, and videos render directly inside the dashboard — no download needed to see what's inside.",
-    Icon: Eye,
+    number: "05",
+    title: "Live analytics",
+    description: "Storage and usage update as files move — no second dashboard.",
+    icon: "📊",
   },
   {
-    title: "Instant Sharing",
-    description:
-      "Every file gets a permanent public URL. One click to copy, ready to share anywhere.",
-    Icon: Share2,
+    number: "06",
+    title: "Private by choice",
+    description: "Flip files or folders to private and issue signed links.",
+    long: "End-to-end encrypted · AES-256 · TLS 1.3",
+    icon: "🔒",
   },
 ];
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.07 } },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-};
-
 export function Features() {
-  const shouldReduceMotion = useReducedMotion();
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
 
   return (
-    <section
-      id="features"
-      className="py-24 md:py-32"
-      style={{ background: "var(--color-surface)" }}
-      aria-labelledby="features-heading"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-        {/* ── Section header ── */}
-        <div className="mb-16 md:mb-20 max-w-2xl">
-          <p
-            className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "var(--color-accent)" }}
-          >
-            Features
-          </p>
-          <h2
-            id="features-heading"
-            className="font-bold tracking-tight"
-            style={{
-              fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)",
-              letterSpacing: "-0.03em",
-              color: "var(--color-ink)",
-              lineHeight: 1.15,
-            }}
-          >
-            Everything you need.
-            <br />
-            <span style={{ color: "var(--color-ink-muted)", fontWeight: 500 }}>
-              Nothing you don&apos;t.
-            </span>
-          </h2>
-          <p
-            className="mt-4 text-[15px] leading-relaxed"
-            style={{ color: "var(--color-ink-muted)", maxWidth: "48ch" }}
-          >
-            Built for developers who want to ship fast and stay in control —
-            without wrestling with cloud infrastructure.
-          </p>
-        </div>
-
-        {/* ── Feature grid ── */}
+    <section id="product" className="py-20 px-6">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           variants={containerVariants}
-          initial={shouldReduceMotion ? false : "hidden"}
+          initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.08 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
-          style={{
-            background: "var(--color-border)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-xl)",
-            overflow: "hidden",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(0,0,0,0.03)",
-          }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="mb-16"
         >
-          {FEATURES.map((feature, idx) => {
-            const { Icon } = feature;
-            return (
-              <motion.article
-                key={feature.title}
-                variants={cardVariants}
-                className="group relative flex flex-col gap-5 p-7"
-                style={{
-                  background: "var(--color-surface)",
-                  cursor: "default",
-                  transition: "background 150ms ease",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background =
-                    "var(--color-surface-2)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background =
-                    "var(--color-surface)";
-                }}
-              >
-                {/* Number */}
-                <span
-                  className="absolute top-5 right-5 text-[11px] font-medium"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    color: "var(--color-border-2)",
-                    letterSpacing: "0.04em",
-                  }}
-                  aria-hidden="true"
-                >
-                  {String(idx + 1).padStart(2, "0")}
-                </span>
+          <h2 className="text-5xl font-bold mb-4">What ships</h2>
+          <p className="text-xl text-gray-600">Everything, on one plan</p>
+          <p className="text-gray-600 mt-2">A tight bundle of primitives so you never have to reach past Cargo for another service.</p>
+        </motion.div>
 
-                {/* Icon */}
-                <span
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-md)]"
-                  style={{
-                    background: "var(--color-surface-3)",
-                    border: "1px solid var(--color-border)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.7)",
-                  }}
-                  aria-hidden="true"
-                >
-                  <Icon
-                    size={16}
-                    strokeWidth={1.75}
-                    style={{ color: "var(--color-ink-2)" }}
-                  />
-                </span>
-
-                {/* Copy */}
-                <div className="flex flex-col gap-2">
-                  <h3
-                    className="text-[15px] font-semibold tracking-tight"
-                    style={{ color: "var(--color-ink)", letterSpacing: "-0.01em" }}
-                  >
-                    {feature.title}
-                  </h3>
-                  <p
-                    className="text-[13.5px] leading-relaxed"
-                    style={{ color: "var(--color-ink-muted)" }}
-                  >
-                    {feature.description}
-                  </p>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {features.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              variants={itemVariants}
+              className="group p-8 rounded-lg border border-gray-200 bg-white hover:border-gray-300 transition-all duration-300 hover:shadow-lg"
+            >
+              {/* Feature Number and Icon */}
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-xs font-bold text-gray-400 tracking-widest">{feature.number}</p>
+                  <p className="text-sm font-bold text-gray-900 mt-1">{feature.title}</p>
                 </div>
-              </motion.article>
-            );
-          })}
+                <span className="text-3xl">{feature.icon}</span>
+              </div>
+
+              {/* Main Description */}
+              <h3 className="text-lg font-bold text-gray-900 mb-3">{feature.description}</h3>
+
+              {/* Details */}
+              {feature.details && (
+                <p className="text-sm text-gray-600 mb-4">{feature.details}</p>
+              )}
+
+              {/* Long description */}
+              {feature.long && (
+                <p className="text-sm text-gray-600">{feature.long}</p>
+              )}
+
+              {/* Hover effect indicator */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileHover={{ scaleX: 1 }}
+                transition={{ duration: 0.3 }}
+                className="h-1 bg-black mt-6 rounded-full origin-left"
+              />
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

@@ -2,24 +2,47 @@
 
 import React, { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ApiError, loginUser } from "@/lib/api";
 import { useAuth } from "@/providers/AuthProvider";
 import { cn } from "@/lib/utils";
 
+// ─── Stagger variants ─────────────────────────────────────────────────────────
+
+const panelVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 // ─── Password field ──────────────────────────────────────────────────────────
-// Custom implementation so the show/hide toggle button is interactive
-// (Input's rightIcon slot uses pointer-events-none).
 
 type PasswordFieldProps = {
   label: string;
   error?: string;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type">;
 
-function PasswordField({ label, error, id, ...inputProps }: PasswordFieldProps) {
+function PasswordField({
+  label,
+  error,
+  id,
+  ...inputProps
+}: PasswordFieldProps) {
   const [show, setShow] = useState(false);
   const fieldId = id ?? label.toLowerCase().replace(/\s+/g, "-");
 
@@ -44,7 +67,7 @@ function PasswordField({ label, error, id, ...inputProps }: PasswordFieldProps) 
           type="button"
           aria-label={show ? "Hide password" : "Show password"}
           onClick={() => setShow((v) => !v)}
-          className="absolute right-3 text-[var(--color-ink-faint)] hover:text-[var(--color-ink-muted)] transition-colors"
+          className="absolute right-3 text-[var(--color-ink-faint)] hover:text-[var(--color-ink-muted)] transition-colors duration-100"
         >
           {show ? (
             <EyeOff size={15} aria-hidden="true" />
@@ -66,11 +89,53 @@ function PasswordField({ label, error, id, ...inputProps }: PasswordFieldProps) 
   );
 }
 
-// ─── Field error state ───────────────────────────────────────────────────────
+// ─── Field errors ─────────────────────────────────────────────────────────────
 
 interface FieldErrors {
   email?: string;
   password?: string;
+}
+
+// ─── Logo mark ────────────────────────────────────────────────────────────────
+
+function LogoMark() {
+  return (
+    <div className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1a1a1a,#0a0a0a)] shadow-[0_1px_4px_rgba(0,0,0,0.22),inset_0_0_0_1px_rgba(255,255,255,0.07)]">
+      <div className="absolute size-[18px] rounded-full border-[1.5px] border-[#FF603D] shadow-[0_0_6px_rgba(255,96,61,0.45)]" />
+      <div className="absolute size-[5px] rounded-full bg-[#FF603D] shadow-[0_0_5px_rgba(255,96,61,0.85)]" />
+    </div>
+  );
+}
+
+// ─── Photo visual panel ──────────────────────────────────────────────────────
+
+function AuraVisualPanel() {
+  return (
+    <div className="auth-visual-panel" aria-hidden="true">
+      <Image
+        src="/uploadAuraLogin.png"
+        alt=""
+        fill
+        priority
+        className="object-cover  auth-panel overflow-hidden overflow-x-hidden"
+        sizes="(min-width: 1024px) 50vw, 0px"
+      />
+      {/* Bottom gradient for text legibility */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0.18)_45%,transparent_75%)]" />
+      <div className="auth-visual-bottom">
+        <p className="auth-visual-tagline">
+          Your files,
+          <br />
+          everywhere.
+        </p>
+        <div className="auth-visual-features">
+          <span className="auth-visual-feature">✦ AWS S3 backed</span>
+          <span className="auth-visual-feature">✦ 2 GB free</span>
+          <span className="auth-visual-feature">✦ API-first</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── Login form ──────────────────────────────────────────────────────────────
@@ -99,7 +164,6 @@ export function LoginForm() {
   }
 
   function focusFirstError(errs: FieldErrors) {
-    // Input component auto-derives id from label ("Email" → "email")
     const order: (keyof FieldErrors)[] = ["email", "password"];
     for (const key of order) {
       if (errs[key]) {
@@ -147,77 +211,130 @@ export function LoginForm() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center px-4 py-12 bg-[var(--color-surface)]">
-      <motion.div
-        initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        className="card w-full max-w-[400px] p-8"
-      >
-        {/* Logo + heading */}
-        <div className="mb-6 text-center">
-          <span className="font-mono text-[11px] font-medium tracking-[0.13em] uppercase text-[var(--color-ink-muted)]">
-            UploadAura
-          </span>
-          <h1 className="mt-2 text-[22px] font-semibold tracking-tight text-[var(--color-ink)]">
-            Welcome back
-          </h1>
-        </div>
-
-        {/* General error banner */}
-        {generalError && (
-          <div
-            role="alert"
-            aria-live="polite"
-            className="mb-4 px-3.5 py-2.5 rounded-[var(--radius-md)] bg-[var(--color-error-light)] border border-[rgba(192,57,43,0.18)] text-[13px] text-[var(--color-error)] leading-snug"
-          >
-            {generalError}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-          <Input
-            label="Email"
-            type="email"
-            autoComplete="email"
-            spellCheck={false}
-            placeholder="you@example.com\u2026"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={fieldErrors.email}
-          />
-
-          <PasswordField
-            label="Password"
-            id="password"
-            autoComplete="current-password"
-            placeholder="Your password\u2026"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={fieldErrors.password}
-          />
-
-          <Button
-            type="submit"
-            variant="primary"
-            size="lg"
-            loading={loading}
-            className="w-full mt-2"
-          >
-            Sign in
-          </Button>
-        </form>
-
-        <p className="mt-5 text-center text-[13px] text-[var(--color-ink-muted)]">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-[var(--color-ink)] font-medium underline-offset-2 hover:underline hover:text-[var(--color-accent)] transition-colors"
-          >
+    <div className="auth-split overflow-hidden px-6  ">
+      {/* ─── Left: form panel ──────────────────────────────────────────────── */}
+      <div className="auth-form-panel">
+        {/* Header */}
+        <header className="auth-header">
+          <Link href="/" className="auth-logo">
+            <LogoMark />
+            Upload<span className="text-(--color-accent)">Aura</span>
+          </Link>
+          <Link href="/register" className="auth-nav-link">
             Sign up
           </Link>
-        </p>
-      </motion.div>
+        </header>
+
+        {/* Form body — staggered entrance */}
+        <motion.div
+          className="auth-body"
+          initial={shouldReduceMotion ? false : "hidden"}
+          animate="visible"
+          variants={shouldReduceMotion ? {} : panelVariants}
+        >
+          <div className="auth-form-content">
+            <motion.h1
+              variants={shouldReduceMotion ? {} : itemVariants}
+              className="auth-heading"
+            >
+              Welcome back
+            </motion.h1>
+
+            <motion.p
+              variants={shouldReduceMotion ? {} : itemVariants}
+              className="auth-sub"
+            >
+              Sign in to continue uploading.
+            </motion.p>
+
+            {/* General error banner */}
+            {generalError && (
+              <motion.div
+                role="alert"
+                aria-live="polite"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="mb-5 px-3.5 py-2.5 rounded-[var(--radius-md)] bg-[var(--color-error-light)] border border-[rgba(192,57,43,0.18)] text-[13px] text-[var(--color-error)] leading-snug"
+              >
+                {generalError}
+              </motion.div>
+            )}
+
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              className="flex flex-col gap-4"
+            >
+              <motion.div variants={shouldReduceMotion ? {} : itemVariants}>
+                <Input
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                  spellCheck={false}
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={fieldErrors.email}
+                />
+              </motion.div>
+
+              <motion.div variants={shouldReduceMotion ? {} : itemVariants}>
+                <PasswordField
+                  label="Password"
+                  id="password"
+                  autoComplete="current-password"
+                  placeholder="Your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={fieldErrors.password}
+                />
+              </motion.div>
+
+              <motion.div variants={shouldReduceMotion ? {} : itemVariants}>
+                <motion.div
+                  whileTap={shouldReduceMotion ? {} : { scale: 0.985 }}
+                >
+                  <Button
+                    type="submit"
+                    variant="accent"
+                    size="lg"
+                    loading={loading}
+                    className="w-full"
+                    rightIcon={!loading ? <ArrowRight size={16} /> : undefined}
+                  >
+                    Sign in
+                  </Button>
+                </motion.div>
+              </motion.div>
+            </form>
+
+            <motion.p
+              variants={shouldReduceMotion ? {} : itemVariants}
+              className="mt-6 text-center text-[13px] text-[var(--color-ink-muted)]"
+            >
+              No account?{" "}
+              <Link
+                href="/register"
+                className="font-medium text-[var(--color-ink)] underline-offset-2 hover:underline transition-colors"
+              >
+                Create one
+              </Link>
+            </motion.p>
+          </div>
+        </motion.div>
+
+        {/* Footer */}
+        <footer className="auth-footer">
+          <span>© 2026 UploadAura</span>
+          <span aria-hidden="true">·</span>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </footer>
+      </div>
+
+      {/* ─── Right: photo panel ───────────────────────────────────────────── */}
+      <AuraVisualPanel />
     </div>
   );
 }

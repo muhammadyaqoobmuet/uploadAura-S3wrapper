@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 /* ─── Design Tokens ────────────────────────────────────────────────────────── */
 @theme inline {
@@ -13,9 +17,9 @@
   --color-white: #ffffff;
   --color-border: #e2ddd6;
   --color-border-2: #cac6bd;
-  --color-accent: #b87333;
-  --color-accent-hover: #a0642a;
-  --color-accent-light: #f5ede3;
+  --color-accent: #ff603d;
+  --color-accent-hover: #e5461f;
+  --color-accent-light: #ffe8de;
   --color-error: #c0392b;
   --color-error-light: #fdecea;
   --color-success: #27ae60;
@@ -25,9 +29,9 @@
 
   /* Typography */
   --font-sans:
-    var(--font-poppins), "Poppins", ui-sans-serif, system-ui, sans-serif;
+    var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:
-    var(--font-geist-mono), "JetBrains Mono", ui-monospace, monospace;
+    var(--font-ibm-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px 0 rgba(12, 12, 11, 0.05);
@@ -54,6 +58,36 @@
   /* Background + foreground for base */
   --color-background: var(--color-surface);
   --color-foreground: var(--color-ink);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
@@ -72,7 +106,12 @@ html {
 body {
   background-color: var(--color-surface);
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family:
+    var(--font-inter),
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -115,7 +154,7 @@ pre {
 
 /* ─── Selection ─────────────────────────────────────────────────────────────── */
 ::selection {
-  background-color: rgba(184, 115, 51, 0.15);
+  background-color: rgba(255, 96, 61, 0.15);
   color: var(--color-ink);
 }
 
@@ -267,7 +306,7 @@ pre {
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     inset 0 -1px 0 rgba(0, 0, 0, 0.15),
     0 1px 3px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(184, 115, 51, 0.25);
+    0 2px 8px rgba(255, 96, 61, 0.25);
 }
 
 .btn-accent:hover {
@@ -276,7 +315,7 @@ pre {
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12),
     0 2px 6px rgba(0, 0, 0, 0.22),
-    0 4px 14px rgba(184, 115, 51, 0.3);
+    0 4px 14px rgba(255, 96, 61, 0.3);
 }
 
 .btn-accent:active {
@@ -378,15 +417,19 @@ pre {
   outline: none;
 }
 
+.input-base:hover:not(:focus):not(:disabled) {
+  border-color: var(--color-border-2);
+}
+
 .input-base::placeholder {
   color: var(--color-ink-faint);
 }
 
 .input-base:focus {
-  border-color: var(--color-ink-2);
+  border-color: var(--color-accent);
   box-shadow:
     inset 0 1px 2px rgba(0, 0, 0, 0.04),
-    0 0 0 3px rgba(12, 12, 11, 0.07),
+    0 0 0 3px rgba(255, 96, 61, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
@@ -435,4 +478,466 @@ pre {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ─── Auth pages ────────────────────────────────────────────────────────────── */
+
+.auth-split {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.auth-form-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 28px 24px;
+  background-color: var(--color-surface);
+  font-family:
+    var(--font-inter),
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+@media (min-width: 1024px) {
+  .auth-form-panel {
+    width: 50%;
+    flex-shrink: 0;
+    padding: 32px 56px;
+  }
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.auth-nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  transition:
+    color 120ms ease,
+    border-color 120ms ease,
+    background-color 120ms ease;
+}
+
+.auth-nav-link:hover {
+  color: var(--color-ink);
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border-2);
+}
+
+.auth-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.auth-form-content {
+  width: 100%;
+  max-width: 360px;
+}
+
+.auth-heading {
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--color-ink);
+  margin-bottom: 6px;
+  text-wrap: balance;
+}
+
+.auth-sub {
+  font-size: 15px;
+  color: var(--color-ink-muted);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+.auth-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-ink-faint);
+  flex-shrink: 0;
+}
+
+.auth-footer a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.auth-footer a:hover {
+  color: var(--color-ink-muted);
+}
+
+/* ─── Auth visual panel ─────────────────────────────────────────────────────── */
+
+.auth-visual-panel {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .auth-visual-panel {
+    display: flex;
+    flex: 0 0 51%;
+    flex-direction: column;
+    position: relative;
+    background-color: #0f0f10;
+    overflow: hidden;
+    border-radius: 12px;
+    margin: 12px 12px 12px 0px;
+  }
+}
+
+.auth-panel-dots {
+  display: none;
+}
+
+/* Ambient glow */
+.aura-glow {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  top: 42%;
+  left: 50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 96, 61, 0.2) 0%,
+    rgba(255, 96, 61, 0.07) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: aura-pulse 5s ease-in-out infinite;
+}
+
+/* Orbital rings */
+.aura-ring {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.aura-ring-1 {
+  width: 140px;
+  height: 140px;
+  border: 1.5px solid rgba(255, 96, 61, 0.4);
+  animation: orbit-cw 18s linear infinite;
+}
+
+.aura-ring-2 {
+  width: 240px;
+  height: 240px;
+  border: 1px solid rgba(255, 96, 61, 0.18);
+  animation: orbit-ccw 32s linear infinite;
+}
+
+.aura-ring-3 {
+  width: 360px;
+  height: 360px;
+  border: 1px solid rgba(255, 96, 61, 0.1);
+  animation: orbit-cw 52s linear infinite;
+}
+
+.aura-ring-4 {
+  width: 500px;
+  height: 500px;
+  border: 1px solid rgba(255, 96, 61, 0.05);
+  animation: orbit-ccw 80s linear infinite;
+}
+
+/* Center motif (logo echo) */
+.aura-center {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: 54px;
+  height: 54px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e1e1e, #111);
+  box-shadow:
+    0 0 0 2px rgba(255, 96, 61, 0.5),
+    0 0 24px rgba(255, 96, 61, 0.25),
+    0 0 60px rgba(255, 96, 61, 0.12);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.aura-center::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 96, 61, 0.9);
+  box-shadow: 0 0 10px rgba(255, 96, 61, 0.5);
+}
+
+.aura-center::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #ff603d;
+  border-radius: 50%;
+  box-shadow:
+    0 0 12px rgba(255, 96, 61, 1),
+    0 0 24px rgba(255, 96, 61, 0.6);
+}
+
+/* Floating file-type badges */
+.auth-badge {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 96, 61, 0.22);
+  border-radius: 6px;
+  color: rgba(255, 96, 61, 0.75);
+  pointer-events: none;
+  z-index: 2;
+  animation: float-badge var(--dur, 4s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Bottom content */
+.auth-visual-bottom {
+  position: absolute;
+  bottom: 44px;
+  left: 48px;
+  right: 48px;
+  z-index: 3;
+}
+
+.auth-visual-tagline {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.35;
+  margin-bottom: 14px;
+  text-wrap: balance;
+}
+
+.auth-visual-features {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.auth-visual-feature {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ─── Auth keyframes ────────────────────────────────────────────────────────── */
+
+@keyframes orbit-cw {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes orbit-ccw {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes float-badge {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes aura-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0.85;
+  }
+}
+
+/* Ken Burns slow zoom for the auth photo panel */
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.auth-panel-image {
+  animation: ken-burns 18s ease-in-out alternate infinite;
+  transform-origin: center center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura-ring,
+  .aura-glow,
+  .auth-badge,
+  .auth-panel-image {
+    animation: none !important;
+    transform: translate(-50%, -50%);
+  }
+  .auth-panel-image {
+    transform: none !important;
+  }
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ─── Sidebar design ────────────────────────────────────────────────────────── */
+
+.sidebar-active-bg {
+  position: relative;
+  background: rgba(255, 107, 69, 0.08);
+  border: 1px solid rgba(255, 107, 69, 0.15);
+  border-radius: 14px;
+}
+
+/* ─── Analytics stat cards ────────────────────────────────────────────────────── */
+
+.stat-card-dots {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(0, 0, 0, 0.055) 1px,
+    transparent 0
+  );
+  background-size: 18px 18px;
 }

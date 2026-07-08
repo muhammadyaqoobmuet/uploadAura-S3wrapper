@@ -87,10 +87,19 @@ export function UploadZone({ onSuccess }: UploadZoneProps) {
           failedCount.toLowerCase().includes("all uploaded");
 
         if (allOk) {
+          // Show celebration for successful upload
+          const isFirstUpload = sessionStorage.getItem('hasUploadedBefore') !== 'true';
+          
           toast.success(
             `${files.length} file${files.length !== 1 ? "s" : ""} uploaded`,
-            "Your files are ready.",
+            isFirstUpload 
+              ? "🎉 First upload complete! You're on your way." 
+              : "Your files are ready.",
           );
+          
+          if (isFirstUpload) {
+            sessionStorage.setItem('hasUploadedBefore', 'true');
+          }
         } else {
           toast.warning("Partial upload", failedCount);
         }
@@ -157,6 +166,11 @@ export function UploadZone({ onSuccess }: UploadZoneProps) {
           inputRef.current?.click();
         }
       }}
+      whileHover={!uploading && !dragging ? { 
+        scale: 1.01,
+        borderColor: "var(--color-accent)",
+      } : {}}
+      whileTap={!uploading ? { scale: 0.99 } : {}}
       animate={{
         borderColor: dragging
           ? "var(--color-accent)"
@@ -167,6 +181,7 @@ export function UploadZone({ onSuccess }: UploadZoneProps) {
         boxShadow: dragging
           ? "0 0 0 4px rgba(184, 115, 51, 0.12)"
           : "none",
+        scale: 1,
       }}
       transition={{ duration: 0.15 }}
       className="relative flex min-h-[140px] cursor-pointer select-none flex-col items-center justify-center gap-3 rounded-[var(--radius-lg)] border-2 border-dashed px-6 py-8 text-center outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
@@ -198,9 +213,34 @@ export function UploadZone({ onSuccess }: UploadZoneProps) {
             transition={{ duration: 0.16 }}
             className="flex flex-col items-center gap-2.5"
           >
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)]" />
+            <div className="relative">
+              {/* Main spinner */}
+              <motion.div 
+                className="h-8 w-8 rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)]"
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 0.8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+              {/* Inner pulse */}
+              <motion.div
+                className="absolute inset-0 rounded-full bg-[var(--color-accent)]"
+                animate={{
+                  scale: [0.4, 0.7, 0.4],
+                  opacity: [0.3, 0.1, 0.3],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                aria-hidden="true"
+              />
+            </div>
             <p className="text-[13px] font-medium text-[var(--color-ink-muted)]">
-              Uploading…
+              Uploading your files…
             </p>
           </motion.div>
         ) : (

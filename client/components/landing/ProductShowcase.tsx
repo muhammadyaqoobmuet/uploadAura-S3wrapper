@@ -1,209 +1,110 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const CALLOUTS = [
+const faqItems = [
   {
-    title: "Upload in seconds",
-    body: "Drag files onto the dashboard or call the API — both land in the same place.",
+    question: "Is this a new storage service, or a wrapper?",
+    answer:
+      "A wrapper. Your files live in your own S3 bucket — Cargo just gives you one API and SDK instead of raw AWS calls, IAM policies, and bucket configuration.",
   },
   {
-    title: "One-click sharing",
-    body: "Every file gets a permanent public URL the moment it lands in your account.",
+    question: "Do I need an AWS account first?",
+    answer:
+      "No. Cargo provisions and manages the underlying bucket for you on the free tier. On Pro plans you can also connect your own AWS account if you want direct ownership.",
   },
   {
-    title: "Instant analytics",
-    body: "Storage charts update in real time. No manual refresh, no stale numbers.",
+    question: "What happens if I go over 2GB?",
+    answer:
+      "Uploads past the free limit are paused, not deleted. You'll get a notice with a one-click upgrade — nothing you've already stored is ever removed.",
+  },
+  {
+    question: "Which languages does the SDK support?",
+    answer:
+      "Node, Python, and Go today, with the same method names and response shapes across all three. A REST API sits underneath, so any language can call it directly.",
+  },
+  {
+    question: "Can I make uploaded files private?",
+    answer:
+      "Yes — every file defaults to a public URL, but you can flip a file or an entire folder to private and issue short-lived signed links instead.",
   },
 ];
 
 export function ProductShowcase() {
-  const shouldReduceMotion = useReducedMotion();
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
 
   return (
-    <section
-      className="py-24 md:py-32 overflow-hidden"
-      style={{ background: "var(--color-surface-2)" }}
-      aria-labelledby="showcase-heading"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-        {/* ── Header ── */}
-        <div className="mb-14 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <div style={{ maxWidth: "540px" }}>
-            <p
-              className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
-              style={{ color: "var(--color-accent)" }}
-            >
-              Product
-            </p>
-            <h2
-              id="showcase-heading"
-              className="font-bold tracking-tight"
-              style={{
-                fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)",
-                letterSpacing: "-0.03em",
-                color: "var(--color-ink)",
-                lineHeight: 1.15,
-              }}
-            >
-              A dashboard that gets
-              <br />
-              <span
-                style={{ color: "var(--color-ink-muted)", fontWeight: 500 }}
-              >
-                out of your way.
-              </span>
-            </h2>
-          </div>
-          <Link
-            href="/register"
-            className="btn-primary self-start lg:self-auto shrink-0"
-          >
-            Try it free
-            <ArrowRight size={14} strokeWidth={2} />
-          </Link>
-        </div>
-
-        {/* ── Screenshot ── */}
+    <section id="faq" className="py-20 px-6">
+      <div className="max-w-3xl mx-auto">
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="relative"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
-          {/* Outer frame */}
-          <div
-            style={{
-              background: "var(--color-surface-3)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-2xl)",
-              padding: "3px",
-              boxShadow:
-                "0 0 0 1px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.05), 0 20px 48px rgba(0,0,0,0.09)",
-            }}
-          >
-            {/* Inner window chrome */}
-            <div
-              style={{
-                background: "var(--color-surface-3)",
-                borderRadius: "calc(var(--radius-2xl) - 3px)",
-                overflow: "hidden",
-              }}
-            >
-              {/* Title bar */}
-              <div
-                className="flex items-center gap-2 px-4"
-                style={{
-                  height: "38px",
-                  borderBottom: "1px solid var(--color-border)",
-                }}
+          <h2 className="text-5xl font-bold mb-4">Questions</h2>
+          <p className="text-xl text-gray-600 mb-12">Before you start</p>
+
+          {/* FAQ Accordion */}
+          <div className="space-y-3">
+            {faqItems.map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                className="border border-gray-200 rounded-lg overflow-hidden bg-white hover:border-gray-300 transition-colors"
               >
-                <span className="flex gap-1.5" aria-hidden="true">
-                  {["#e2ddd6", "#e2ddd6", "#e2ddd6"].map((c, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        width: "10px",
-                        height: "10px",
-                        borderRadius: "50%",
-                        background: c,
-                        display: "block",
-                      }}
-                    />
-                  ))}
-                </span>
-                {/* Address bar */}
-                <div className="flex-1 mx-3">
-                  <div
-                    className="flex items-center gap-1.5 rounded px-2.5 py-0.5 mx-auto"
-                    style={{
-                      maxWidth: "320px",
-                      background: "var(--color-surface-2)",
-                      border: "1px solid var(--color-border)",
-                    }}
+                <button
+                  onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                >
+                  <span className="font-medium text-gray-900">{item.question}</span>
+                  <motion.div
+                    animate={{ rotate: openIndex === idx ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-shrink-0 ml-4"
                   >
-                    <span
-                      className="text-[10px]"
-                      style={{ color: "var(--color-ink-faint)", fontFamily: "var(--font-mono)" }}
-                    >
-                      app.uploadaura.dev/dashboard
-                    </span>
+                    <ChevronDown size={20} className="text-gray-400" />
+                  </motion.div>
+                </button>
+
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{
+                    height: openIndex === idx ? "auto" : 0,
+                    opacity: openIndex === idx ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 pb-4 text-gray-600 border-t border-gray-100">
+                    {item.answer}
                   </div>
-                </div>
-              </div>
-
-              {/* Screenshot image */}
-              <div style={{ aspectRatio: "16/9", position: "relative" }}>
-                <Image
-                  src="/aa.png"
-                  alt="UploadAura dashboard showing the file manager with upload, preview, and sharing controls"
-                  fill
-                  quality={95}
-                  className="object-cover object-top"
-                  sizes="(max-width: 768px) 100vw, 1200px"
-                />
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            ))}
           </div>
-
-          {/* Subtle ground shadow */}
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              bottom: "-32px",
-              left: "15%",
-              right: "15%",
-              height: "64px",
-              background:
-                "radial-gradient(ellipse at center, rgba(0,0,0,0.07) 0%, transparent 70%)",
-              filter: "blur(10px)",
-              pointerEvents: "none",
-            }}
-          />
-        </motion.div>
-
-        {/* ── Callout strip ── */}
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.55, ease: EASE, delay: 0.15 }}
-          className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-px"
-          style={{
-            background: "var(--color-border)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-xl)",
-            overflow: "hidden",
-          }}
-        >
-          {CALLOUTS.map((c) => (
-            <div
-              key={c.title}
-              className="flex flex-col gap-2 px-7 py-6"
-              style={{ background: "var(--color-surface)" }}
-            >
-              <p
-                className="text-[14px] font-semibold tracking-tight"
-                style={{ color: "var(--color-ink)", letterSpacing: "-0.01em" }}
-              >
-                {c.title}
-              </p>
-              <p
-                className="text-[13px] leading-relaxed"
-                style={{ color: "var(--color-ink-muted)" }}
-              >
-                {c.body}
-              </p>
-            </div>
-          ))}
         </motion.div>
       </div>
     </section>

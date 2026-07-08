@@ -1,281 +1,156 @@
 "use client";
 
-import Link from "next/link";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { Check } from "lucide-react";
+import { motion } from "framer-motion";
 
-interface Plan {
-  name: string;
-  price: string;
-  per: string;
-  description: string;
-  cta: string;
-  ctaHref: string;
-  features: string[];
-  highlighted: boolean;
-}
-
-const PLANS: Plan[] = [
+const pricingPlans = [
   {
     name: "Free",
     price: "$0",
-    per: "forever",
-    description:
-      "Everything you need to get started. No credit card required.",
-    cta: "Get started free",
-    ctaHref: "/register",
+    description: "Get started",
     features: [
-      "2 GB storage included",
-      "100 MB per-file limit",
-      "REST API access",
-      "API key management",
-      "File previews",
-      "Instant public URLs",
+      "2GB storage",
+      "Unlimited files",
+      "Public URLs",
       "Basic analytics",
+      "Community support",
     ],
-    highlighted: false,
+    cta: "Get Started",
+    highlight: false,
   },
   {
     name: "Pro",
-    price: "$12",
-    per: "per month",
-    description:
-      "For serious projects that need room to grow and priority support.",
-    cta: "Start Pro",
-    ctaHref: "/register?plan=pro",
+    price: "$29",
+    description: "For growing teams",
     features: [
-      "50 GB storage included",
-      "500 MB per-file limit",
-      "Everything in Free",
-      "Priority support",
-      "Webhook notifications",
-      "Custom domain CDN",
+      "1TB storage",
+      "Unlimited files",
+      "Private files",
       "Advanced analytics",
+      "Priority support",
+      "Custom domain",
+      "Webhooks",
     ],
-    highlighted: true,
+    cta: "Start Free Trial",
+    highlight: true,
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    description: "For enterprises",
+    features: [
+      "Unlimited storage",
+      "Unlimited files",
+      "Advanced security",
+      "24/7 support",
+      "SLA guarantee",
+      "Dedicated account manager",
+      "Custom integration",
+    ],
+    cta: "Contact Sales",
+    highlight: false,
   },
 ];
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-};
-
 export function Pricing() {
-  const shouldReduceMotion = useReducedMotion();
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6 },
+    },
+  };
 
   return (
-    <section
-      id="pricing"
-      className="py-24 md:py-32"
-      style={{ background: "var(--color-surface)" }}
-      aria-labelledby="pricing-heading"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-        {/* ── Section header ── */}
-        <div className="mb-14 md:mb-18 text-center">
-          <p
-            className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: "var(--color-accent)" }}
-          >
-            Pricing
-          </p>
-          <h2
-            id="pricing-heading"
-            className="font-bold tracking-tight"
-            style={{
-              fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)",
-              letterSpacing: "-0.03em",
-              color: "var(--color-ink)",
-              lineHeight: 1.15,
-            }}
-          >
-            Simple, honest pricing.
-          </h2>
-          <p
-            className="mt-4 text-[15px] leading-relaxed mx-auto"
-            style={{ color: "var(--color-ink-muted)", maxWidth: "44ch" }}
-          >
-            Start free, upgrade when you need more. No surprise charges.
-          </p>
-        </div>
-
-        {/* ── Pricing cards ── */}
+    <section className="py-20 px-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
         <motion.div
           variants={containerVariants}
-          initial={shouldReduceMotion ? false : "hidden"}
+          initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-5 mx-auto"
-          style={{ maxWidth: "780px" }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="text-center mb-16"
         >
-          {PLANS.map((plan) => (
+          <h2 className="text-5xl font-bold mb-4">Simple pricing</h2>
+          <p className="text-xl text-gray-600">Choose the plan that works for you</p>
+        </motion.div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid md:grid-cols-3 gap-8"
+        >
+          {pricingPlans.map((plan, idx) => (
             <motion.div
-              key={plan.name}
-              variants={cardVariants}
-              className="relative flex flex-col"
-              style={
-                plan.highlighted
-                  ? {
-                      background: "var(--color-ink)",
-                      border: "1px solid var(--color-ink-2)",
-                      borderRadius: "var(--radius-xl)",
-                      padding: "32px",
-                      boxShadow:
-                        "0 4px 8px rgba(0,0,0,0.12), 0 16px 40px rgba(0,0,0,0.14), 0 0 0 0.5px rgba(0,0,0,0.5)",
-                    }
-                  : {
-                      background: "var(--color-surface)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: "var(--radius-xl)",
-                      padding: "32px",
-                      boxShadow:
-                        "0 1px 2px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
-                    }
-              }
+              key={idx}
+              variants={itemVariants}
+              className={`rounded-lg p-8 transition-all duration-300 ${
+                plan.highlight
+                  ? "border-2 border-black bg-white shadow-lg scale-105"
+                  : "border border-gray-200 bg-white hover:border-gray-300"
+              }`}
             >
-              {/* Popular badge */}
-              {plan.highlighted && (
-                <span
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] rounded-full"
-                  style={{
-                    background: "var(--color-accent)",
-                    color: "#fff",
-                    boxShadow: "0 2px 8px rgba(184,115,51,0.35)",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  Most popular
-                </span>
+              {/* Badge */}
+              {plan.highlight && (
+                <div className="inline-block px-3 py-1 bg-black text-white text-xs font-bold rounded-full mb-4">
+                  Popular
+                </div>
               )}
 
-              {/* Plan name */}
-              <p
-                className="text-[12px] font-semibold uppercase tracking-[0.1em] mb-5"
-                style={{
-                  color: plan.highlighted
-                    ? "rgba(255,255,255,0.5)"
-                    : "var(--color-ink-faint)",
-                  letterSpacing: "0.1em",
-                }}
-              >
-                {plan.name}
-              </p>
+              {/* Plan Name */}
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+              <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
 
               {/* Price */}
-              <div className="flex items-end gap-2 mb-2">
-                <span
-                  className="font-bold leading-none"
-                  style={{
-                    fontSize: "2.75rem",
-                    letterSpacing: "-0.04em",
-                    color: plan.highlighted ? "#fff" : "var(--color-ink)",
-                  }}
-                >
-                  {plan.price}
-                </span>
-                <span
-                  className="mb-1 text-[13px]"
-                  style={{
-                    color: plan.highlighted
-                      ? "rgba(255,255,255,0.4)"
-                      : "var(--color-ink-faint)",
-                  }}
-                >
-                  / {plan.per}
-                </span>
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
+                {plan.price !== "Custom" && <span className="text-gray-600">/mo</span>}
               </div>
 
-              <p
-                className="text-[13.5px] leading-relaxed mb-7"
-                style={{
-                  color: plan.highlighted
-                    ? "rgba(255,255,255,0.55)"
-                    : "var(--color-ink-muted)",
-                }}
-              >
-                {plan.description}
-              </p>
-
-              {/* Divider */}
-              <div
-                className="mb-6"
-                style={{
-                  height: "1px",
-                  background: plan.highlighted
-                    ? "rgba(255,255,255,0.1)"
-                    : "var(--color-border)",
-                }}
-              />
-
-              {/* Feature list */}
-              <ul className="flex flex-col gap-3 mb-8 flex-1">
-                {plan.features.map((feat) => (
-                  <li
-                    key={feat}
-                    className="flex items-start gap-2.5 text-[13.5px]"
-                    style={{
-                      color: plan.highlighted
-                        ? "rgba(255,255,255,0.75)"
-                        : "var(--color-ink-muted)",
-                    }}
-                  >
-                    <span
-                      className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                      style={{
-                        background: plan.highlighted
-                          ? "rgba(255,255,255,0.1)"
-                          : "var(--color-surface-3)",
-                        border: plan.highlighted
-                          ? "1px solid rgba(255,255,255,0.15)"
-                          : "1px solid var(--color-border)",
-                      }}
-                      aria-hidden="true"
-                    >
-                      <Check
-                        size={9}
-                        strokeWidth={2.5}
-                        style={{
-                          color: plan.highlighted
-                            ? "rgba(255,255,255,0.7)"
-                            : "var(--color-ink-muted)",
-                        }}
-                      />
-                    </span>
-                    {feat}
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA */}
-              <Link
-                href={plan.ctaHref}
-                className={plan.highlighted ? "btn-secondary" : "btn-primary"}
-                style={{ textAlign: "center", justifyContent: "center" }}
+              {/* CTA Button */}
+              <button
+                className={`w-full py-3 rounded-lg font-medium mb-8 transition-all duration-300 ${
+                  plan.highlight
+                    ? "btn-primary"
+                    : "btn-secondary"
+                }`}
               >
                 {plan.cta}
-              </Link>
+              </button>
+
+              {/* Features */}
+              <ul className="space-y-3">
+                {plan.features.map((feature, fIdx) => (
+                  <motion.li
+                    key={fIdx}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: fIdx * 0.05 }}
+                    className="flex items-center gap-3 text-sm text-gray-600"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                      <span className="w-2 h-2 bg-green-600 rounded-full" />
+                    </span>
+                    {feature}
+                  </motion.li>
+                ))}
+              </ul>
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Fine print */}
-        <p
-          className="mt-10 text-center text-[12.5px]"
-          style={{ color: "var(--color-ink-faint)" }}
-        >
-          All plans include free SSL, global CDN, and uptime SLA.
-          <br />
-          Cancel or downgrade at any time — no lock-in.
-        </p>
       </div>
     </section>
   );
