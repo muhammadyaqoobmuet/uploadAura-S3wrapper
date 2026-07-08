@@ -8,7 +8,10 @@ dist/
 build/
 .next/
 out/
-
+.agents
+.cursor
+.gemini
+.kiro
 # Environment variables
 .env
 .env*.local
