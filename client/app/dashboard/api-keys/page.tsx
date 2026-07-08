@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Modal } from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
+import { useSound } from "@/hooks/useSound";
+import { confirmation001Sound } from "@/lib/confirmation-001";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -66,6 +68,7 @@ function SkeletonRows() {
 
 export default function ApiKeysPage() {
   const toast = useToast();
+  const playDeleteSound = useSound(confirmation001Sound, 0.65);
 
   // ── List state ──
   const [keys, setKeys] = useState<ApiKey[]>([]);
@@ -205,6 +208,7 @@ export default function ApiKeysPage() {
     setDeleteLoading(true);
     try {
       await deleteApiKey(deleteTarget._id);
+      playDeleteSound();
       toast.success("API key deleted");
       setDeleteTarget(null);
       setPage(1);
@@ -243,7 +247,7 @@ export default function ApiKeysPage() {
           </p>
         </div>
         <Button
-          variant="primary"
+          variant="accent"
           leftIcon={<Plus size={15} aria-hidden="true" />}
           onClick={openCreate}
         >
@@ -456,7 +460,7 @@ export default function ApiKeysPage() {
               Cancel
             </Button>
             <Button
-              variant="primary"
+              variant="accent"
               loading={createLoading}
               onClick={handleCreate}
             >
