@@ -3,7 +3,8 @@ import { logger } from "../logger/winston.looger";
 
 export const connectDb = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI_DEV || 'mongodb://localhost:2004/uploadaura');
+    console.log("connecting to db..." + process.env.MONGO_URI_PROD);
+    await mongoose.connect(process.env.MONGO_URI_PROD!);
     logger.info("connected to db");
   } catch (error) {
     logger.error(

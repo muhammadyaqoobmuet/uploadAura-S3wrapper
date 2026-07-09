@@ -90,6 +90,7 @@ async function startServer() {
     });
   } catch (error) {
     // same here
+    console.error(error);
     logger.error(`error occured exiting system `);
     process.exit(1);
   }
