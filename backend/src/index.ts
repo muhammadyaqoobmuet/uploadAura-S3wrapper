@@ -41,7 +41,9 @@ app.use(`${BASE_PATH}`, internalRoutes);
 app.use(publicRoute);
 
 app.use(errorHandler);
-
+app.use("/health", (req, res) => {
+  res.status(200).send("OK");
+});
 async function startServer() {
   const PORT = process.env.PORT || 8000;
   try {
