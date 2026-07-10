@@ -1,26 +1,27 @@
 name: Deploy Backend to EC2
+# ^ just a label, shows up in the Actions tab
 
 on:
   push:
     branches: [main]
     paths:
-      - "./backend/**"
-      - "packages/**"
-      - "ecosystem.config.js"
+      - "backend/**"
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy over SSH
+      - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          # ^ these three lines are GitHub pulling the values you stored as secrets
+          #   and feeding them to the ssh-action — this is the whole "magic," just variable substitution
           script: |
-            cd ~/your-repo
-            GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git pull origin main
-            pnpm install
-            pnpm --filter backend build
-            pm2 restart ecosystem.config.js --update-env
+            cd ~/uploadAura-S3wrapper
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart backend-api --update-env
