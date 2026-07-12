@@ -30,6 +30,7 @@ export async function apiFetch<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const token = getToken();
+  const hadToken = !!token;
 
   const isFormData = options.body instanceof FormData;
 
@@ -42,7 +43,7 @@ export async function apiFetch<T>(
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 
   if (res.status === 401) {
-    if (typeof window !== "undefined") {
+    if (hadToken && typeof window !== "undefined") {
       localStorage.removeItem("token");
       localStorage.removeItem("expiresAt");
       localStorage.removeItem("user");

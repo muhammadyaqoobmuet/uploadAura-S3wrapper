@@ -64,6 +64,8 @@ export default function CargoLanding() {
   const { isLoggedIn } = useAuth();
   const [copied, setCopied] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNotice, setMobileNotice] = useState(false);
   const revealRefs = useRef([]);
   revealRefs.current = [];
 
@@ -93,6 +95,19 @@ export default function CargoLanding() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const seen = localStorage.getItem("cargoMobileNoticeSeen");
+    if (!seen && window.matchMedia("(max-width: 768px)").matches) {
+      setMobileNotice(true);
+    }
+  }, []);
+
+  const dismissMobileNotice = () => {
+    localStorage.setItem("cargoMobileNoticeSeen", "1");
+    setMobileNotice(false);
+  };
+
   const handleCopy = () => {
     setCopied(true);
     const t = setTimeout(() => setCopied(false), 1400);
@@ -101,8 +116,24 @@ export default function CargoLanding() {
 
   return (
     <div className="cargo-page">
+      {mobileNotice && (
+        <div className="mobile-notice-overlay" role="dialog" aria-modal="true">
+          <div className="mobile-notice">
+            <div className="mobile-notice-icon">📱💻</div>
+            <h3>Heads up!</h3>
+            <p>
+              This site isn&apos;t fully tuned for small screens yet — I was
+              busy living my life. For the best experience, open it on your
+              laptop or desktop.
+            </p>
+            <button className="mobile-notice-btn" onClick={dismissMobileNotice}>
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
       {/* ============ NAV ============ */}
-      <nav className="navbar">
+       <nav className="navbar">
         <div
           className="nav-shell"
           style={{
@@ -158,6 +189,53 @@ export default function CargoLanding() {
                 </button>
               </>
             )}
+          </div>
+
+          <button
+            type="button"
+            className="nav-burger"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span className={`nav-burger-bar${menuOpen ? " open" : ""}`} />
+            <span className={`nav-burger-bar${menuOpen ? " open" : ""}`} />
+            <span className={`nav-burger-bar${menuOpen ? " open" : ""}`} />
+          </button>
+        </div>
+
+        <div className={`nav-mobile${menuOpen ? " open" : ""}`}>
+          <a href="#plan" onClick={() => setMenuOpen(false)}>
+            Product
+          </a>
+          <a href="#showcase" onClick={() => setMenuOpen(false)}>
+            Watch it work
+          </a>
+          <a href="#faq" onClick={() => setMenuOpen(false)}>
+            FAQ
+          </a>
+          <a href="#" onClick={() => setMenuOpen(false)}>
+            Docs
+          </a>
+          <div className="nav-mobile-actions">
+            <button
+              className="btn-manage"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/login");
+              }}
+            >
+              Sign in
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/register");
+              }}
+            >
+              Get API key
+            </button>
           </div>
         </div>
       </nav>
@@ -1064,6 +1142,93 @@ export default function CargoLanding() {
         .btn-primary:active {
           transform: translateY(0);
           filter: brightness(0.97);
+        }
+
+        /* Mobile burger + dropdown — hidden on desktop */
+        .nav-burger {
+          display: none;
+          flex-direction: column;
+          justify-content: center;
+          gap: 4px;
+          width: 38px;
+          height: 38px;
+          margin-left: 6px;
+          padding: 0;
+          background: transparent;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          cursor: pointer;
+          flex-shrink: 0;
+        }
+        .nav-burger-bar {
+          display: block;
+          width: 18px;
+          height: 2px;
+          margin: 0 auto;
+          background: var(--ink);
+          border-radius: 2px;
+          transition: transform 0.25s ease, opacity 0.2s ease;
+        }
+        .nav-burger-bar.open:nth-child(1) {
+          transform: translateY(6px) rotate(45deg);
+        }
+        .nav-burger-bar.open:nth-child(2) {
+          opacity: 0;
+        }
+        .nav-burger-bar.open:nth-child(3) {
+          transform: translateY(-6px) rotate(-45deg);
+        }
+        .nav-mobile {
+          display: none;
+          position: absolute;
+          top: calc(100% - 2px);
+          left: 50%;
+          flex-direction: column;
+          gap: 4px;
+          width: min(100% - 24px, 420px);
+          padding: 10px;
+          background: rgba(255, 255, 255, 0.97);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.25);
+          opacity: 0;
+          transform: translateX(-50%) translateY(-8px);
+          pointer-events: none;
+          transition: opacity 0.25s ease, transform 0.25s ease;
+          z-index: 90;
+        }
+        .nav-mobile.open {
+          display: flex;
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+          pointer-events: auto;
+        }
+        .nav-mobile a {
+          color: var(--ink-2);
+          font-size: 15px;
+          font-weight: 500;
+          padding: 12px 14px;
+          border-radius: 12px;
+          transition: background 0.2s, color 0.2s;
+        }
+        .nav-mobile a:hover {
+          background: rgba(0, 0, 0, 0.04);
+          color: var(--ink);
+        }
+        .nav-mobile-actions {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 6px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border);
+        }
+        .nav-mobile-actions .btn-manage,
+        .nav-mobile-actions .btn-primary {
+          width: 100%;
+          justify-content: center;
         }
 
         /* ============ HERO ============ */
@@ -2982,14 +3147,26 @@ export default function CargoLanding() {
 
         /* ============ RESPONSIVE ============ */
         @media (max-width: 968px) {
+          .navbar {
+            padding: 12px 12px;
+          }
           .nav-shell {
-            padding: 8px;
+            width: 100%;
+            max-width: 100%;
+            justify-content: space-between;
+            padding: 6px 8px 6px 14px;
           }
           .nav-links {
             display: none;
           }
+          .nav-right {
+            display: none;
+          }
+          .nav-burger {
+            display: flex;
+          }
           .logo {
-            padding-right: 8px;
+            padding-right: 0;
             margin-right: 0;
             border-right: none;
           }
@@ -3020,6 +3197,28 @@ export default function CargoLanding() {
           .browser-outer {
             padding: 8px;
           }
+          .card-api {
+            max-height: none;
+            padding: 28px;
+            justify-content: flex-start;
+          }
+          .card-api-content {
+            position: static;
+            order: 2;
+            width: 100%;
+            padding: 0;
+          }
+          .card-api-img-bottom {
+            order: 1;
+            flex: none;
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 18px;
+          }
+          .api-bottom-img {
+            height: auto;
+          }
         }
         @media (max-width: 640px) {
           .hero {
@@ -3035,6 +3234,42 @@ export default function CargoLanding() {
           .hero-ctas {
             flex-direction: column;
             gap: 14px;
+          }
+          .cta-button {
+            padding: 13px 22px;
+            font-size: 14px;
+          }
+          .cta-button .cta-icon {
+            width: 14px;
+            height: 14px;
+          }
+          .badges {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
+            padding: 10px 14px;
+            max-width: 320px;
+          }
+          .badge {
+            justify-content: center;
+          }
+          .badge-divider {
+            width: auto;
+            height: 1px;
+            margin: 2px 0;
+          }
+          .icon-s3,
+          .icon-key {
+            width: 38px;
+            height: 38px;
+          }
+          .icon-s3 svg {
+            width: 24px;
+            height: 24px;
+          }
+          .icon-key svg {
+            width: 20px;
+            height: 20px;
           }
           .stage {
             padding: 30px 0 60px;
@@ -3056,6 +3291,119 @@ export default function CargoLanding() {
           .card-storage .big-num {
             font-size: 64px;
           }
+        }
+
+        @media (max-width: 600px) {
+          .plan-grid {
+            grid-template-columns: 1fr;
+          }
+          .card-storage,
+          .card-sdk,
+          .card-api,
+          .card-delivery,
+          .card-analytics,
+          .card-security {
+            grid-column: span 1;
+          }
+          .card-sdk img,
+          .api-bottom-img {
+            height: auto;
+          }
+          .card-api {
+            max-height: none;
+          }
+          .card-api-img-bottom {
+            min-height: 0;
+          }
+        }
+
+        /* ============ MOBILE NOTICE ============ */
+        .mobile-notice-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 1000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          background: rgba(15, 15, 16, 0.55);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          animation: mnFade 0.25s ease;
+        }
+        @keyframes mnFade {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .mobile-notice {
+          width: 100%;
+          max-width: 340px;
+          background: #fff;
+          border: 1px solid var(--border);
+          border-radius: 22px;
+          padding: 28px 24px 24px;
+          text-align: center;
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.9) inset,
+            0 24px 60px -20px rgba(0, 0, 0, 0.4);
+          animation: mnPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes mnPop {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(0.97);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        .mobile-notice-icon {
+          font-size: 30px;
+          margin-bottom: 12px;
+        }
+        .mobile-notice h3 {
+          font-size: 19px;
+          font-weight: 750;
+          letter-spacing: -0.4px;
+          color: var(--ink);
+          margin-bottom: 10px;
+        }
+        .mobile-notice p {
+          font-size: 14px;
+          line-height: 1.55;
+          color: var(--muted);
+          margin-bottom: 20px;
+        }
+        .mobile-notice-btn {
+          width: 100%;
+          padding: 12px 18px;
+          background: linear-gradient(
+            180deg,
+            var(--accent-2) 0%,
+            var(--accent) 55%,
+            var(--accent-deep) 100%
+          );
+          color: #fff;
+          border: none;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.5) inset,
+            0 0 0 1px rgba(229, 70, 31, 0.4),
+            0 8px 18px -4px rgba(255, 96, 61, 0.45);
+          transition: transform 0.15s ease, filter 0.2s ease;
+        }
+        .mobile-notice-btn:hover {
+          transform: translateY(-1px);
+          filter: brightness(1.05);
         }
       `}</style>
     </div>

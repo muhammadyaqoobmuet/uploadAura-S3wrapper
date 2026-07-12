@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ApiError, loginUser } from "@/lib/api";
 import { useAuth } from "@/providers/AuthProvider";
+import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 
 // ─── Stagger variants ─────────────────────────────────────────────────────────
@@ -142,12 +143,12 @@ function AuraVisualPanel() {
 
 export function LoginForm() {
   const auth = useAuth();
+  const toast = useToast();
   const shouldReduceMotion = useReducedMotion();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [generalError, setGeneralError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   function validate(): FieldErrors {
@@ -173,9 +174,8 @@ export function LoginForm() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setGeneralError(null);
     setFieldErrors({});
 
     const errs = validate();
@@ -200,10 +200,13 @@ export function LoginForm() {
           setFieldErrors(fe);
           focusFirstError(fe);
         } else {
-          setGeneralError(err.message || "Invalid email or password.");
+          toast.error(
+            "Invalid email or password",
+            err.message || "Please check your credentials and try again."
+          );
         }
       } else {
-        setGeneralError("Something went wrong. Please try again.");
+        toast.error("Something went wrong", "Please try again.");
       }
     } finally {
       setLoading(false);
@@ -246,20 +249,6 @@ export function LoginForm() {
             >
               Sign in to continue uploading.
             </motion.p>
-
-            {/* General error banner */}
-            {generalError && (
-              <motion.div
-                role="alert"
-                aria-live="polite"
-                initial={shouldReduceMotion ? false : { opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25 }}
-                className="mb-5 px-3.5 py-2.5 rounded-[var(--radius-md)] bg-[var(--color-error-light)] border border-[rgba(192,57,43,0.18)] text-[13px] text-[var(--color-error)] leading-snug"
-              >
-                {generalError}
-              </motion.div>
-            )}
 
             <form
               onSubmit={handleSubmit}
