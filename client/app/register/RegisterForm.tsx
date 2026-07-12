@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeOff, Check, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -44,9 +43,20 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
   },
 };
+
+// ─── Logo mark ────────────────────────────────────────────────────────────────
+
+function LogoMark() {
+  return (
+    <span className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1a1a1a,#0a0a0a)] shadow-[0_1px_4px_rgba(0,0,0,0.22),inset_0_0_0_1px_rgba(255,255,255,0.07)]">
+      <span className="absolute size-[18px] rounded-full border-[1.5px] border-[#FF603D] shadow-[0_0_6px_rgba(255,96,61,0.45)]" />
+      <span className="absolute size-[5px] rounded-full bg-[#FF603D] shadow-[0_0_5px_rgba(255,96,61,0.85)]" />
+    </span>
+  );
+}
 
 // ─── Password field ──────────────────────────────────────────────────────────
 
@@ -107,51 +117,128 @@ function PasswordField({
   );
 }
 
-// ─── Field errors ─────────────────────────────────────────────────────────────
-
-interface FieldErrors {
-  name?: string;
-  email?: string;
-  password?: string;
-}
-
-// ─── Photo visual panel ──────────────────────────────────────────────────────
+// ─── Branded visual panel ────────────────────────────────────────────────────
 
 function AuraVisualPanel() {
+  const shouldReduceMotion = useReducedMotion();
   return (
-    <div className="auth-visual-panel" aria-hidden="true">
-      {/* Full-bleed photo */}
-      <Image
-        src="/uploadAuraLogin.png"
-        alt=""
-        fill
-        priority
-        className="object-cover object-center auth-panel-image"
-        sizes="(min-width: 1024px) 50vw, 0px"
-      />
+    <div className="auth-visual-panel reg-visual" aria-hidden="true">
+      <div className="aura-glow" />
+      <div className="aura-ring aura-ring-1" />
+      <div className="aura-ring aura-ring-2" />
 
-      {/* Bottom gradient overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.18) 45%, transparent 75%)",
-        }}
-      />
+      {/* Floating code card */}
+      <motion.div
+        className="reg-code-card"
+        animate={
+          shouldReduceMotion
+            ? undefined
+            : { y: [0, -14, 0], rotate: [0, 1.2, 0] }
+        }
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="reg-code-dots">
+          <span /><span /><span />
+        </div>
+        <pre className="reg-code-text">
+          <code>
+            <span className="c-com">// one key, one upload</span>
+            {"\n"}
+            <span className="c-kw">const</span> aura ={" "}
+            <span className="c-kw">new</span> UploadAura({"\n"}
+            {"  "}apiKey: <span className="c-str">"sk_live_…"</span>,{"\n"}
+            );{"\n\n"}
+            <span className="c-kw">await</span> aura.
+            <span className="c-fn">upload</span>(<span className="c-str">"./cat.png"</span>);
+          </code>
+        </pre>
+      </motion.div>
 
-      {/* Tagline — register variant */}
-      <div className="auth-visual-bottom">
+      {/* Tagline */}
+      <div className="auth-visual-bottom reg-visual-bottom">
         <p className="auth-visual-tagline">
           Start building.
           <br />
           Ship in minutes.
         </p>
-        <div className="auth-visual-features">
+        <div className="auth-visual-features reg-features">
           <span className="auth-visual-feature">✦ 2 GB free forever</span>
           <span className="auth-visual-feature">✦ No card needed</span>
           <span className="auth-visual-feature">✦ Instant API key</span>
         </div>
       </div>
+
+      <style jsx>{`
+        .reg-visual {
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 40px;
+        }
+        .reg-code-card {
+          position: relative;
+          z-index: 2;
+          width: min(380px, 78%);
+          border-radius: 18px;
+          padding: 18px 20px;
+          background: rgba(20, 20, 22, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+        }
+        .reg-code-dots {
+          display: flex;
+          gap: 7px;
+          margin-bottom: 14px;
+        }
+        .reg-code-dots span {
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.18);
+        }
+        .reg-code-dots span:first-child {
+          background: #ff5f56;
+        }
+        .reg-code-dots span:nth-child(2) {
+          background: #ffbd2e;
+        }
+        .reg-code-dots span:nth-child(3) {
+          background: #27c93f;
+        }
+        .reg-code-text {
+          margin: 0;
+          font-family: var(--font-ibm-plex-mono), monospace;
+          font-size: 13px;
+          line-height: 1.7;
+          color: #e5e3df;
+          white-space: pre-wrap;
+        }
+        .c-com {
+          color: #6b7280;
+          font-style: italic;
+        }
+        .c-kw {
+          color: #ff7a59;
+        }
+        .c-str {
+          color: #f0a36b;
+        }
+        .c-fn {
+          color: #7dd3fc;
+        }
+        .reg-visual-bottom {
+          position: relative;
+          z-index: 2;
+          width: 100%;
+          padding: 0 40px 44px;
+        }
+        .reg-features {
+          flex-wrap: wrap;
+          gap: 8px 16px;
+        }
+      `}</style>
     </div>
   );
 }
@@ -170,10 +257,11 @@ function SuccessView({
         style={{ position: "relative", overflow: "hidden" }}
       >
         <header className="auth-header">
-          <span className="auth-logo">UploadAura</span>
+          <span className="auth-logo">
+            <LogoMark /> UploadAura
+          </span>
         </header>
 
-        {/* Confetti */}
         {!shouldReduceMotion && (
           <>
             {CONFETTI_PARTICLES.map((p, i) => (
@@ -196,7 +284,7 @@ function SuccessView({
                 transition={{
                   duration: p.duration,
                   delay: p.delay,
-                  ease: [0.25, 0.46, 0.45, 0.94],
+                  ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
                 }}
                 className="absolute pointer-events-none"
                 style={{
@@ -217,7 +305,7 @@ function SuccessView({
             shouldReduceMotion ? false : { opacity: 0, scale: 0.94, y: 16 }
           }
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number], delay: 0.1 }}
         >
           <div className="auth-form-content" style={{ textAlign: "center" }}>
             <motion.div
@@ -324,10 +412,14 @@ export function RegisterForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [generalError, setGeneralError] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
-  function validate(): FieldErrors {
-    const errs: FieldErrors = {};
+  function validate(): { name?: string; email?: string; password?: string } {
+    const errs: { name?: string; email?: string; password?: string } = {};
     if (!name.trim()) {
       errs.name = "Name is required.";
     } else if (name.trim().length < 2) {
@@ -346,8 +438,12 @@ export function RegisterForm() {
     return errs;
   }
 
-  function focusFirstError(errs: FieldErrors) {
-    const order: (keyof FieldErrors)[] = ["name", "email", "password"];
+  function focusFirstError(errs: {
+    name?: string;
+    email?: string;
+    password?: string;
+  }) {
+    const order = ["name", "email", "password"] as const;
     for (const key of order) {
       if (errs[key]) {
         (document.getElementById(key) as HTMLInputElement | null)?.focus();
@@ -380,7 +476,7 @@ export function RegisterForm() {
         if (err.errorCode === "ACCESS_UNAUTHORIZED") {
           setGeneralError("An account with this email already exists.");
         } else if (err.errorCode === "VALIDATION_ERROR" && err.errors?.length) {
-          const fe: FieldErrors = {};
+          const fe: { name?: string; email?: string; password?: string } = {};
           for (const e of err.errors) {
             if (e.feild === "name") fe.name = e.message;
             if (e.feild === "email") fe.email = e.message;
@@ -409,55 +505,16 @@ export function RegisterForm() {
     <div className="auth-split">
       {/* ─── Left: form panel ──────────────────────────────────────────────── */}
       <div className="auth-form-panel">
-        {/* Header */}
         <header className="auth-header">
           <Link href="/" className="auth-logo">
-            {/* Logo mark */}
-            <div
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #1a1a1a, #0a0a0a)",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                boxShadow:
-                  "0 1px 4px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.07) inset",
-              }}
-            >
-              <div
-                style={{
-                  position: "absolute",
-                  width: 18,
-                  height: 18,
-                  border: "1.5px solid #FF603D",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 6px rgba(255,96,61,0.45)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  width: 5,
-                  height: 5,
-                  background: "#FF603D",
-                  borderRadius: "50%",
-                  boxShadow: "0 0 5px rgba(255,96,61,0.85)",
-                }}
-              />
-            </div>
-            Upload
-            <span style={{ color: "var(--color-accent)" }}>Aura</span>
+            <LogoMark />
+            Upload<span style={{ color: "var(--color-accent)" }}>Aura</span>
           </Link>
           <Link href="/login" className="auth-nav-link">
             Sign in
           </Link>
         </header>
 
-        {/* Form body — staggered entrance */}
         <motion.div
           className="auth-body"
           initial={shouldReduceMotion ? false : "hidden"}
@@ -479,7 +536,6 @@ export function RegisterForm() {
               2 GB free. No card needed.
             </motion.p>
 
-            {/* General error banner */}
             {generalError && (
               <motion.div
                 role="alert"
@@ -568,7 +624,6 @@ export function RegisterForm() {
           </div>
         </motion.div>
 
-        {/* Footer */}
         <footer className="auth-footer">
           <span>© 2026 UploadAura</span>
           <span aria-hidden="true">·</span>
@@ -577,7 +632,7 @@ export function RegisterForm() {
         </footer>
       </div>
 
-      {/* ─── Right: photo panel ───────────────────────────────────────────── */}
+      {/* ─── Right: branded visual panel ───────────────────────────────────── */}
       <AuraVisualPanel />
     </div>
   );

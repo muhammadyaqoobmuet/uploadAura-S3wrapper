@@ -161,7 +161,7 @@ export default function CargoLanding() {
               <a href="#faq">FAQ</a>
             </li>
             <li>
-              <a href="#">Docs</a>
+              <a href="/docs">Docs</a>
             </li>
           </ul>
           <div className="nav-right">
@@ -822,7 +822,7 @@ export default function CargoLanding() {
               <h4>Developers</h4>
               <ul>
                 <li>
-                  <a href="#">Docs</a>
+                  <a href="/docs">Docs</a>
                 </li>
                 <li>
                   <a href="#">SDK reference</a>
