@@ -42,7 +42,7 @@ app.use(publicRoute);
 
 app.use(errorHandler);
 app.use("/health", (req, res) => {
-  res.status(200).send("OK");
+  res.status(200).send("server is running");
 });
 async function startServer() {
   const PORT = process.env.PORT || 8000;
