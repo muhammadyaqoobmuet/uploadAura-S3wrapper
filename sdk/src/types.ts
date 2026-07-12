@@ -8,6 +8,12 @@ export interface UploadAuraConfig {
    * Format: `sk_live_<48-char hex>`
    */
   apiKey: string;
+  /**
+   * Override the API base URL (no trailing slash). Defaults to the hosted
+   * `https://uploadaurabackend.yaqoobhalepoto.dev`. Point this at a
+   * locally-running backend (e.g. `http://localhost:8000`) when testing.
+   */
+  baseUrl?: string;
 }
 
 // ─── File sources ─────────────────────────────────────────────────────────────

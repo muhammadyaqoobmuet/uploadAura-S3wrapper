@@ -37,6 +37,66 @@ function isStreamSource(src: FileSource): src is StreamSource {
   return typeof src === "object" && "stream" in src;
 }
 
+type ResolvedSource = { buffer: Buffer; name: string; type?: string };
+
+/**
+ * Minimal extension → MIME map. The backend's multer rejects any part whose
+ * Content-Type is not an allowed type, so path uploads must infer a MIME type
+ * from the file extension (streams/buffers rely on the caller's `type`).
+ */
+const MIME_BY_EXT: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+  gif: "image/gif",
+  pdf: "application/pdf",
+  doc: "application/msword",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  txt: "text/plain",
+  csv: "text/csv",
+  zip: "application/zip",
+  xls: "application/vnd.ms-excel",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  mp4: "video/mp4",
+  webm: "video/webm",
+  wav: "audio/wav",
+  tar: "application/x-tar",
+};
+
+function mimeFromName(name: string): string | undefined {
+  const ext = path.extname(name).toLowerCase().replace(/^\./, "");
+  return MIME_BY_EXT[ext];
+}
+
+/**
+ * Resolve any FileSource to an in-memory Buffer.
+ *
+ * The backend uses `multer.memoryStorage`, so it buffers the upload server-side
+ * regardless — streaming the request body from the client would not save memory and,
+ * with `form-data` + Node's `fetch`, is unreliable (the multipart trailer does
+ * not flush, producing "Unexpected end of form" on the server). Resolving to a
+ * Buffer and sending `form.getBuffer()` is correct and robust.
+ */
+async function resolveSource(src: FileSource): Promise<ResolvedSource> {
+  if (isBufferSource(src)) {
+    return { buffer: src.buffer, name: src.name, type: src.type };
+  }
+  if (isStreamSource(src)) {
+    const chunks: Buffer[] = [];
+    for await (const chunk of src.stream) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return { buffer: Buffer.concat(chunks), name: src.name, type: src.type };
+  }
+  // Path source — infer MIME from the extension.
+  const abs = path.resolve(src);
+  const buffer = await fs.promises.readFile(abs);
+  return { buffer, name: path.basename(abs), type: mimeFromName(abs) };
+}
+
 /**
  * The backend returns `failedCount` as a human-readable string:
  *  - `"no failed count all uploaded successfully !"`  → 0
@@ -79,7 +139,12 @@ export class UploadAura {
     }
 
     this.apiKey = config.apiKey;
-    this.baseUrl = "https://uploadaurabackend.yaqoobhalepoto.dev/";
+    // Strip any trailing slash so concatenating "/api/v1/upload" never
+    // produces a double slash (e.g. "...dev//api/..."), which the
+    // server rejects with a 404 HTML page.
+    this.baseUrl = (
+      config.baseUrl ?? "https://uploadaurabackend.yaqoobhalepoto.dev"
+    ).replace(/\/+$/, "");
   }
 
   /**
@@ -126,46 +191,24 @@ export class UploadAura {
       );
     }
 
+    const resolved = await Promise.all(sources.map(resolveSource));
+
     const form = new FormData();
 
-    for (const src of sources) {
-      if (isBufferSource(src)) {
-        if (src.buffer.length > MAX_BYTES) {
-          throw new Error(
-            `UploadAura: "${src.name}" is ${(src.buffer.length / 1024 / 1024).toFixed(1)} MB — exceeds the 100 MB limit`,
-          );
-        }
-        form.append("files", src.buffer, {
-          filename: src.name,
-          contentType: src.type ?? "application/octet-stream",
-          knownLength: src.buffer.length,
-        });
-      } else if (isStreamSource(src)) {
-        // Stream size is unknown — backend enforces 100 MB server-side.
-        form.append("files", src.stream, {
-          filename: src.name,
-          contentType: src.type ?? "application/octet-stream",
-        });
-      } else {
-        // Path source
-        const abs = path.resolve(src);
-        let stat: fs.Stats;
-        try {
-          stat = fs.statSync(abs);
-        } catch {
-          throw new Error(`UploadAura: file not found — "${src}"`);
-        }
-        if (stat.size > MAX_BYTES) {
-          throw new Error(
-            `UploadAura: "${src}" is ${(stat.size / 1024 / 1024).toFixed(1)} MB — exceeds the 100 MB limit`,
-          );
-        }
-        form.append("files", fs.createReadStream(abs), {
-          filename: path.basename(abs),
-          knownLength: stat.size,
-        });
+    for (const r of resolved) {
+      if (r.buffer.length > MAX_BYTES) {
+        throw new Error(
+          `UploadAura: "${r.name}" is ${(r.buffer.length / 1024 / 1024).toFixed(1)} MB — exceeds the 100 MB limit`,
+        );
       }
+      form.append("files", r.buffer, {
+        filename: r.name,
+        contentType: r.type ?? "application/octet-stream",
+        knownLength: r.buffer.length,
+      });
     }
+
+    const body = form.getBuffer();
 
     let res: Response;
     try {
@@ -173,11 +216,10 @@ export class UploadAura {
         method: "POST",
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
-          // form-data sets the correct Content-Type with boundary
+          // form-data sets the correct Content-Type (with boundary) + Content-Length
           ...form.getHeaders(),
         },
-        // Node 18+ fetch (undici) accepts Node.js Readable as body
-        body: form as unknown as any,
+        body,
       });
     } catch (cause) {
       throw new UploadAuraError(
@@ -200,13 +242,11 @@ export class UploadAura {
 
     if (!res.ok) {
       const message =
-        typeof json["message"] === "string"
-          ? json["message"]
-          : `HTTP ${res.status}`;
+        (typeof json["error"] === "string" && json["error"]) ||
+        (typeof json["message"] === "string" ? json["message"] : `HTTP ${res.status}`);
       const code =
-        typeof json["errorCode"] === "string"
-          ? json["errorCode"]
-          : "UNKNOWN_ERROR";
+        (typeof json["errorCode"] === "string" && json["errorCode"]) ||
+        "UNKNOWN_ERROR";
       throw new UploadAuraError(message, res.status, code);
     }
 

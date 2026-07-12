@@ -1,5 +1,5 @@
 {
-  "name": "uploadaura-sdk",
+  "name": "upload-aura",
   "version": "0.1.0",
   "description": "a uploader to s3 wrapper that lets you upload files from backend without any jargons just install the sdk setup apikey and ready to go , you get 2GB storage free ",
   "main": "./dist/index.cjs",
