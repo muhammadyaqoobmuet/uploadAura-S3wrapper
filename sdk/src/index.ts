@@ -79,7 +79,7 @@ export class UploadAura {
     }
 
     this.apiKey = config.apiKey;
-    this.baseUrl = "http://localhost:8000";
+    this.baseUrl = "https://uploadaurabackend.yaqoobhalepoto.dev/";
   }
 
   /**
