@@ -83,6 +83,8 @@ export const uploadFileService = async (
   if (failedRes.length > 0) {
     logger.warn("failed to upload file", { files });
   }
+  
+  
   return {
     message: `uploaded successfully ${successfulRes.length} out of ${files.length} files `,
     data: successfulRes,
