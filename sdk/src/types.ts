@@ -63,11 +63,22 @@ export type FileSource = PathSource | BufferSource | StreamSource;
 // ─── Results ──────────────────────────────────────────────────────────────────
 
 export interface UploadedFile {
+  /** Stable UploadAura file id. */
   fileId: string;
+  /** Original file name as uploaded. */
   originalName: string;
+  /** Size in bytes. */
   size: number;
+  /** Lowercased extension without the dot, e.g. `"jpg"`. */
   ext: string;
+  /** MIME type, e.g. `"image/jpeg"`. */
   mimeType: string;
+  /**
+   * Public, browser-viewable URL for the file (served via the
+   * `/files/:fileId/view` stream endpoint). Safe to use directly in an
+   * `<img src>` / `<video>` / `<a>` on the frontend.
+   */
+  url: string;
 }
 
 export interface UploadResult {
