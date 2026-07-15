@@ -33,15 +33,7 @@ export const uploadFileViaWebController = asyncHandler(
   },
 );
 
-/**
- * Build the public, browser-viewable URL for a file.
- *
- * The public `/files/:fileId/view` route streams the file from S3 with
- * `Content-Disposition: inline`, so this URL can be dropped straight into an
- * `<img src>` / `<video>` / `<a>` on the frontend. We prefer an explicit
- * `PUBLIC_BASE_URL` env (set to the deployed origin) and fall back to the
- * request's own origin so it works with no extra config (e.g. localhost).
- */
+
 function buildPublicFileUrl(req: Request, fileId: string): string {
   const base =
     process.env.PUBLIC_BASE_URL?.replace(/\/+$/, "") ||
