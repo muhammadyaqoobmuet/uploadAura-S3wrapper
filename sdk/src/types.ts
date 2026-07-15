@@ -9,9 +9,13 @@ export interface UploadAuraConfig {
    */
   apiKey: string;
   /**
-   * Override the API base URL (no trailing slash). Defaults to the hosted
-   * `https://uploadaurabackend.yaqoobhalepoto.dev`. Point this at a
-   * locally-running backend (e.g. `http://localhost:8000`) when testing.
+   * Override the API base URL (no trailing slash). Optional — only `apiKey`
+   * is required. Resolved in this order:
+   *   1. `baseUrl` here,
+   *   2. the `UPLOADAURA_BASE_URL` environment variable,
+   *   3. the hosted default `https://uploadaurabackend.yaqoobhalepoto.dev`.
+   * Point this at a locally-running backend (e.g. `http://localhost:8000`)
+   * when testing.
    */
   baseUrl?: string;
 }

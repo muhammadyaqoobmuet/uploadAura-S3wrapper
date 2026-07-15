@@ -156,48 +156,6 @@ function SuccessView({
           </span>
         </header>
 
-        {!shouldReduceMotion && (
-          <>
-            {CONFETTI_PARTICLES.map((p, i) => (
-              <motion.div
-                key={i}
-                initial={{
-                  x: `${p.startX}vw`,
-                  y: "-10vh",
-                  rotate: 0,
-                  opacity: 1,
-                  scale: 1,
-                }}
-                animate={{
-                  x: `${p.endX}vw`,
-                  y: "110vh",
-                  rotate: p.rotation,
-                  opacity: 0,
-                  scale: 0.4,
-                }}
-                transition={{
-                  duration: p.duration,
-                  delay: p.delay,
-                  ease: [0.25, 0.46, 0.45, 0.94] as [
-                    number,
-                    number,
-                    number,
-                    number,
-                  ],
-                }}
-                className="absolute pointer-events-none"
-                style={{
-                  width: p.width,
-                  height: p.height,
-                  backgroundColor: p.color,
-                  borderRadius: p.isCircle ? "50%" : "2px",
-                }}
-                aria-hidden="true"
-              />
-            ))}
-          </>
-        )}
-
         <motion.div
           className="auth-body"
           initial={

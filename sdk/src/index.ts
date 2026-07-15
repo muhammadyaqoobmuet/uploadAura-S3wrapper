@@ -142,8 +142,13 @@ export class UploadAura {
     // Strip any trailing slash so concatenating "/api/v1/upload" never
     // produces a double slash (e.g. "...dev//api/..."), which the
     // server rejects with a 404 HTML page.
+    // `baseUrl` is optional: pass it explicitly, set UPLOADAURA_BASE_URL
+    // (handy for local dev), or fall back to the hosted default. Only
+    // `apiKey` is strictly required.
     this.baseUrl = (
-      config.baseUrl ?? "https://uploadaurabackend.yaqoobhalepoto.dev"
+      config.baseUrl ??
+      process.env.UPLOADAURA_BASE_URL ??
+      "https://uploadaurabackend.yaqoobhalepoto.dev"
     ).replace(/\/+$/, "");
   }
 
