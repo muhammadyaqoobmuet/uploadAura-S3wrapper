@@ -9,24 +9,9 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ApiError, registerUser } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 // ─── Pre-computed confetti (avoids Math.random in render) ────────────────────
-
-const CONFETTI_PARTICLES = Array.from({ length: 16 }, (_, i) => {
-  const startX = 15 + ((i * 4.5) % 65);
-  const spread = ((i % 3) - 1) * (10 + ((i * 3) % 25));
-  return {
-    delay: i * 0.08,
-    duration: 1.2 + (i % 7) * 0.09,
-    startX,
-    endX: startX + spread,
-    rotation: ((i * 47) % 720) - 360,
-    color: ["#FF603D", "#0c0c0b", "#27ae60", "#e67e22"][i % 4],
-    width: 8 + (i % 6),
-    height: 8 + ((i + 3) % 6),
-    isCircle: i % 2 === 0,
-  };
-});
 
 // ─── Stagger variants ─────────────────────────────────────────────────────────
 
@@ -43,7 +28,10 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+    transition: {
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
   },
 };
 
@@ -122,123 +110,29 @@ function PasswordField({
 function AuraVisualPanel() {
   const shouldReduceMotion = useReducedMotion();
   return (
-    <div className="auth-visual-panel reg-visual" aria-hidden="true">
-      <div className="aura-glow" />
-      <div className="aura-ring aura-ring-1" />
-      <div className="aura-ring aura-ring-2" />
-
-      {/* Floating code card */}
-      <motion.div
-        className="reg-code-card"
-        animate={
-          shouldReduceMotion
-            ? undefined
-            : { y: [0, -14, 0], rotate: [0, 1.2, 0] }
-        }
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <div className="reg-code-dots">
-          <span /><span /><span />
-        </div>
-        <pre className="reg-code-text">
-          <code>
-            <span className="c-com">// one key, one upload</span>
-            {"\n"}
-            <span className="c-kw">const</span> aura ={" "}
-            <span className="c-kw">new</span> UploadAura({"\n"}
-            {"  "}apiKey: <span className="c-str">"sk_live_…"</span>,{"\n"}
-            );{"\n\n"}
-            <span className="c-kw">await</span> aura.
-            <span className="c-fn">upload</span>(<span className="c-str">"./cat.png"</span>);
-          </code>
-        </pre>
-      </motion.div>
-
-      {/* Tagline */}
-      <div className="auth-visual-bottom reg-visual-bottom">
+    <div className=" auth-visual-panel" aria-hidden="true">
+      <Image
+        src="/uploadAuraLogin.png"
+        alt=""
+        fill
+        priority
+        className="object-cover  auth-panel overflow-hidden overflow-x-hidden"
+        sizes="(min-width: 1024px) 50vw, 0px"
+      />
+      {/* Bottom gradient for text legibility */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.75)_0%,rgba(0,0,0,0.18)_45%,transparent_75%)]" />
+      <div className="auth-visual-bottom">
         <p className="auth-visual-tagline">
-          Start building.
+          Your files,
           <br />
-          Ship in minutes.
+          everywhere.
         </p>
-        <div className="auth-visual-features reg-features">
-          <span className="auth-visual-feature">✦ 2 GB free forever</span>
-          <span className="auth-visual-feature">✦ No card needed</span>
-          <span className="auth-visual-feature">✦ Instant API key</span>
+        <div className="auth-visual-features">
+          <span className="auth-visual-feature">✦ AWS S3 backed</span>
+          <span className="auth-visual-feature">✦ 2 GB free</span>
+          <span className="auth-visual-feature">✦ API-first</span>
         </div>
       </div>
-
-      <style jsx>{`
-        .reg-visual {
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 40px;
-        }
-        .reg-code-card {
-          position: relative;
-          z-index: 2;
-          width: min(380px, 78%);
-          border-radius: 18px;
-          padding: 18px 20px;
-          background: rgba(20, 20, 22, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-        .reg-code-dots {
-          display: flex;
-          gap: 7px;
-          margin-bottom: 14px;
-        }
-        .reg-code-dots span {
-          width: 11px;
-          height: 11px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.18);
-        }
-        .reg-code-dots span:first-child {
-          background: #ff5f56;
-        }
-        .reg-code-dots span:nth-child(2) {
-          background: #ffbd2e;
-        }
-        .reg-code-dots span:nth-child(3) {
-          background: #27c93f;
-        }
-        .reg-code-text {
-          margin: 0;
-          font-family: var(--font-ibm-plex-mono), monospace;
-          font-size: 13px;
-          line-height: 1.7;
-          color: #e5e3df;
-          white-space: pre-wrap;
-        }
-        .c-com {
-          color: #6b7280;
-          font-style: italic;
-        }
-        .c-kw {
-          color: #ff7a59;
-        }
-        .c-str {
-          color: #f0a36b;
-        }
-        .c-fn {
-          color: #7dd3fc;
-        }
-        .reg-visual-bottom {
-          position: relative;
-          z-index: 2;
-          width: 100%;
-          padding: 0 40px 44px;
-        }
-        .reg-features {
-          flex-wrap: wrap;
-          gap: 8px 16px;
-        }
-      `}</style>
     </div>
   );
 }
@@ -284,7 +178,12 @@ function SuccessView({
                 transition={{
                   duration: p.duration,
                   delay: p.delay,
-                  ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
+                  ease: [0.25, 0.46, 0.45, 0.94] as [
+                    number,
+                    number,
+                    number,
+                    number,
+                  ],
                 }}
                 className="absolute pointer-events-none"
                 style={{
@@ -305,7 +204,11 @@ function SuccessView({
             shouldReduceMotion ? false : { opacity: 0, scale: 0.94, y: 16 }
           }
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number], delay: 0.1 }}
+          transition={{
+            duration: 0.5,
+            ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            delay: 0.1,
+          }}
         >
           <div className="auth-form-content" style={{ textAlign: "center" }}>
             <motion.div

@@ -40,12 +40,15 @@ const PAGE_SIZE = 15;
 
 // Prefer the explicit backend origin env var; fall back to stripping /api
 // from the API URL so a single env var still works.
-const SERVER_ORIGIN =
+// Strip any trailing slash so `${SERVER_ORIGIN}/files/...` never becomes
+// a double slash (e.g. "...dev//files/..."), which 404s.
+const SERVER_ORIGIN = (
   process.env.NEXT_PUBLIC_BACKEND_ORIGIN ||
   (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(
     /\/api\/?$/,
     "",
-  );
+  )
+).replace(/\/+$/, "");
 
 /** Stable public URL for viewing/embedding a file — no auth, no expiry. */
 function fileViewUrl(id: string) {
