@@ -33,6 +33,22 @@ export const uploadFileViaWebController = asyncHandler(
   },
 );
 
+/**
+ * Build the public, browser-viewable URL for a file.
+ *
+ * The public `/files/:fileId/view` route streams the file from S3 with
+ * `Content-Disposition: inline`, so this URL can be dropped straight into an
+ * `<img src>` / `<video>` / `<a>` on the frontend. We prefer an explicit
+ * `PUBLIC_BASE_URL` env (set to the deployed origin) and fall back to the
+ * request's own origin so it works with no extra config (e.g. localhost).
+ */
+function buildPublicFileUrl(req: Request, fileId: string): string {
+  const base =
+    process.env.PUBLIC_BASE_URL?.replace(/\/+$/, "") ||
+    `${req.protocol}://${req.get("host")}`;
+  return `${base}/files/${fileId}/view`;
+}
+
 export const uploadFileViaApi = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?._id.toString();
@@ -43,8 +59,19 @@ export const uploadFileViaApi = asyncHandler(
     const files = req.files as Express.Multer.File[]; // these files are type of Express.Multer.File[]
     const uploadedVia = UploadSourceEnum.API;
     const results = await uploadFileService(userId, files, uploadedVia);
+
+    // Enrich every uploaded file with a public URL so SDK consumers can
+    // reference the file directly from the frontend. This is additive and
+    // does not change the existing frontend (WEB) upload behaviour.
+    const data = (results.data ?? []).map(
+      (file: { fileId: unknown } & Record<string, unknown>) => ({
+        ...file,
+        url: buildPublicFileUrl(req, String(file.fileId)),
+      }),
+    );
+
     return res.status(HTTPSTATUS.OK).json({
-      results,
+      results: { ...results, data },
     });
   },
 );
