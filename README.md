@@ -50,7 +50,6 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 
 ### Secure by Default
 
-- Google OAuth 2.0 integration
 - JWT + refresh token system
 - API key hashing with bcrypt
 - Storage quota enforcement
@@ -99,10 +98,7 @@ npm install
 cp .env.local.example .env.local
 # Edit .env.local with your API URL
 
-# Run database migrations
-cd ../backend
-npx prisma migrate dev
-npx prisma generate
+
 ```
 
 ### Running Locally
@@ -158,7 +154,7 @@ uploadaura/
 
 ```bash
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/uploadaura"
+DATABASE_URL="mongodb://user:password@localhost:27017/uploadaura"
 
 # JWT Secrets
 JWT_SECRET="your-super-secret-jwt-key"
@@ -170,10 +166,6 @@ AWS_ACCESS_KEY_ID="your-aws-access-key"
 AWS_SECRET_ACCESS_KEY="your-aws-secret-key"
 AWS_S3_BUCKET_NAME="uploadaura-files"
 
-# Google OAuth (optional)
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-GOOGLE_CALLBACK_URL="http://localhost:5000/api/internal/auth/google/callback"
 
 # Server
 PORT=5000
@@ -288,16 +280,16 @@ Authorization: Bearer <your-jwt-token>
 
 - **Runtime:** Node.js 18+ with TypeScript
 - **Framework:** Express.js with async error handling
-- **Database:** PostgreSQL + Prisma ORM
+- **Database:** mongodb
 - **Storage:** AWS S3 with presigned URLs
-- **Auth:** Passport.js (JWT + Google OAuth)
+- **Auth:** Passport.js
 - **Validation:** Zod schemas
 - **Logging:** Winston with daily rotation
 - **File Handling:** Multer (multipart/form-data)
 
 ### Frontend
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Styling:** CSS Variables + Custom Design System
 - **Animations:** Framer Motion with reduced-motion support
@@ -310,16 +302,16 @@ Authorization: Bearer <your-jwt-token>
 - **Version Control:** Git with conventional commits
 - **Code Formatting:** Prettier
 - **Process Manager:** Nodemon (development)
-- **Deployment Ready:** Vercel (client) + Railway/Render (backend)
+- **Deployment Ready:** Vercel (client) + ec2 + nginx + cicd (backend)
 
 ---
 
 ## Deployment
 
-### Backend (Railway / Render)
+### Backend (ec2 + nginx + cicd)
 
 1. Push your code to GitHub
-2. Connect to Railway or Render
+2. Connect to ec2 instance
 3. Set environment variables in dashboard
 4. Run migrations: `npx prisma migrate deploy`
 5. Deploy
@@ -330,83 +322,6 @@ Authorization: Bearer <your-jwt-token>
 2. Import project in Vercel dashboard
 3. Set `NEXT_PUBLIC_API_URL` to your backend URL
 4. Deploy automatically on push
-
----
-
-## Contributing
-
-Contributions are welcome. Here's how to help:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'feat: add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Commit Convention
-
-This project follows [Conventional Commits](https://www.conventionalcommits.org/):
-
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `style:` Code style changes (formatting)
-- `refactor:` Code refactoring
-- `perf:` Performance improvements
-- `test:` Adding tests
-- `chore:` Maintenance tasks
-
----
-
-## Documentation
-
-### Available Scripts
-
-**Backend:**
-
-```bash
-npm run dev          # Start development server with nodemon
-npm run build        # Compile TypeScript
-npm start            # Run production build
-npm run prisma:push  # Push schema changes to DB
-npm run prisma:studio # Open Prisma Studio GUI
-```
-
-**Client:**
-
-```bash
-npm run dev          # Start Next.js dev server
-npm run build        # Build for production
-npm start            # Start production server
-npm run lint         # Run ESLint
-```
-
----
-
-## Project Stats
-
-- **Lines of Code:** ~15,000+
-- **Components:** 30+ React components
-- **API Endpoints:** 25+ REST endpoints
-- **Type Safety:** 100% TypeScript coverage
-- **Authentication:** JWT + OAuth 2.0
-- **Storage Limit:** 2 GB free tier, 100 MB per file
-
----
-
-## Acknowledgments
-
-- [Next.js](https://nextjs.org/) for the React framework
-- [Framer Motion](https://www.framer.com/motion/) for animations
-- [Prisma](https://www.prisma.io/) for type-safe database access
-- [AWS S3](https://aws.amazon.com/s3/) for reliable object storage
-- [Lucide](https://lucide.dev/) for clean, consistent icons
-
----
-
-## License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
