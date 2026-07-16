@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![UploadAura Banner](./client/public/uploadAura.png)
+<img width="1555" height="1004" alt="image" src="https://github.com/user-attachments/assets/0790b69e-fe13-415c-ac95-f4e43d98d65d" />
 
 **The simplest cloud storage API you'll ever use.**
 
@@ -14,7 +14,7 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 [![AWS S3](https://img.shields.io/badge/AWS_S3-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/s3/)
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 
-[Live Demo](https://uploadaura.dev) • [Documentation](#-documentation) • [API Reference](#-api-reference) • [Contributing](#-contributing)
+[Live Demo](https://uploadaura.dev](https://uploadaura.yaqoobhalepoto.dev/) • [Documentation](#-documentation) • [API Reference](#-api-reference) • [Contributing](#-contributing)
 
 </div>
 
