@@ -151,7 +151,7 @@ export default function CargoLanding() {
         </div>
       )}
       {/* ============ NAV ============ */}
-       <nav className="navbar">
+      <nav className="navbar">
         <div
           className="nav-shell"
           style={{
@@ -381,18 +381,13 @@ export default function CargoLanding() {
             <span>Get your free API key</span>
             <span className="arrow">→</span>
           </button>
-          <a
-            href="#showcase"
-            className="group relative inline-flex rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 p-px shadow-[0_2px_10px_rgba(255,96,61,0.14)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,96,61,0.22)] h-[20px]"
-          >
-            <span className="inline-flex items-center gap-2.5 rounded-[11px] bg-white px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-100 transition group-hover:ring-orange-100">
-              <span className="flex size-6 items-center justify-center rounded-full bg-orange-500 text-white shadow-[0_2px_6px_rgba(255,96,61,0.35)] transition group-hover:scale-105">
-                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className="ml-px size-3">
-                  <polygon points="9 7 19 12 9 17 9 7" />
-                </svg>
-              </span>
-              Watch it work
+          <a href="#showcase" className="cta-ghost">
+            <span className="cta-ghost-play" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <polygon points="9 7 19 12 9 17 9 7" />
+              </svg>
             </span>
+            <span>Watch it work</span>
           </a>
         </div>
       </section>
@@ -749,7 +744,9 @@ export default function CargoLanding() {
               className="group inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 transition hover:text-orange-500"
             >
               Read the SDK docs
-              <span className="transition-transform group-hover:translate-x-0.5">→</span>
+              <span className="transition-transform group-hover:translate-x-0.5">
+                →
+              </span>
             </a>
           </div>
 
@@ -1172,7 +1169,9 @@ export default function CargoLanding() {
           margin: 0 auto;
           background: var(--ink);
           border-radius: 2px;
-          transition: transform 0.25s ease, opacity 0.2s ease;
+          transition:
+            transform 0.25s ease,
+            opacity 0.2s ease;
         }
         .nav-burger-bar.open:nth-child(1) {
           transform: translateY(6px) rotate(45deg);
@@ -1201,7 +1200,9 @@ export default function CargoLanding() {
           opacity: 0;
           transform: translateX(-50%) translateY(-8px);
           pointer-events: none;
-          transition: opacity 0.25s ease, transform 0.25s ease;
+          transition:
+            opacity 0.25s ease,
+            transform 0.25s ease;
           z-index: 90;
         }
         .nav-mobile.open {
@@ -1216,7 +1217,9 @@ export default function CargoLanding() {
           font-weight: 500;
           padding: 12px 14px;
           border-radius: 12px;
-          transition: background 0.2s, color 0.2s;
+          transition:
+            background 0.2s,
+            color 0.2s;
         }
         .nav-mobile a:hover {
           background: rgba(0, 0, 0, 0.04);
@@ -1518,6 +1521,74 @@ export default function CargoLanding() {
           transform: translateX(4px);
         }
         .cta-button span:not(.arrow) {
+          position: relative;
+          z-index: 1;
+        }
+
+        /* Ghost variant of the CTA — same shape, transparent fill, orange outline */
+        .cta-ghost {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 17px 34px;
+          background: transparent;
+          color: var(--accent-deep);
+          border: 1px solid rgba(255, 96, 61, 0.4);
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+          text-decoration: none;
+          overflow: hidden;
+          transition:
+            transform 0.15s ease,
+            box-shadow 0.25s ease,
+            background 0.2s ease,
+            border-color 0.2s ease;
+          box-shadow:
+            0 0 0 1px rgba(255, 96, 61, 0.08),
+            0 2px 6px rgba(255, 96, 61, 0.08);
+        }
+        .cta-ghost .cta-ghost-play {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: linear-gradient(
+            180deg,
+            var(--accent-2) 0%,
+            var(--accent) 55%,
+            var(--accent-deep) 100%
+          );
+          color: #fff;
+          box-shadow:
+            0 1px 0 rgba(255, 255, 255, 0.4) inset,
+            0 2px 6px rgba(229, 70, 31, 0.35);
+          transition: transform 0.2s ease;
+        }
+        .cta-ghost .cta-ghost-play svg {
+          width: 11px;
+          height: 11px;
+          margin-left: 1px;
+        }
+        .cta-ghost:hover .cta-ghost-play {
+          transform: scale(1.05);
+        }
+        .cta-ghost:hover {
+          transform: translateY(-2px);
+          border-color: rgba(255, 96, 61, 0.7);
+          box-shadow:
+            0 0 0 1px rgba(255, 96, 61, 0.15),
+            0 8px 18px -4px rgba(255, 96, 61, 0.25);
+        }
+        .cta-ghost:active {
+          transform: translateY(0);
+        }
+        .cta-ghost > span:not(.cta-ghost-play) {
           position: relative;
           z-index: 1;
         }
@@ -3361,7 +3432,9 @@ export default function CargoLanding() {
             0 1px 0 rgba(255, 255, 255, 0.5) inset,
             0 0 0 1px rgba(229, 70, 31, 0.4),
             0 8px 18px -4px rgba(255, 96, 61, 0.45);
-          transition: transform 0.15s ease, filter 0.2s ease;
+          transition:
+            transform 0.15s ease,
+            filter 0.2s ease;
         }
         .mobile-notice-btn:hover {
           transform: translateY(-1px);
