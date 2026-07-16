@@ -128,7 +128,12 @@ export default function CargoLanding() {
   };
 
   return (
-    <div className="cargo-page">
+    <motion.div
+      className="cargo-page"
+      initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
       {mobileNotice && (
         <div className="mobile-notice-overlay" role="dialog" aria-modal="true">
           <div className="mobile-notice">
@@ -376,13 +381,18 @@ export default function CargoLanding() {
             <span>Get your free API key</span>
             <span className="arrow">→</span>
           </button>
-          <a href="#showcase" className="btn-ghost">
-            <span className="ghost-play" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                <polygon points="6 4 20 12 6 20 6 4" />
-              </svg>
+          <a
+            href="#showcase"
+            className="group relative inline-flex rounded-xl bg-gradient-to-r from-orange-400 to-orange-500 p-px shadow-[0_2px_10px_rgba(255,96,61,0.14)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,96,61,0.22)] h-[20px]"
+          >
+            <span className="inline-flex items-center gap-2.5 rounded-[11px] bg-white px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-100 transition group-hover:ring-orange-100">
+              <span className="flex size-6 items-center justify-center rounded-full bg-orange-500 text-white shadow-[0_2px_6px_rgba(255,96,61,0.35)] transition group-hover:scale-105">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className="ml-px size-3">
+                  <polygon points="9 7 19 12 9 17 9 7" />
+                </svg>
+              </span>
+              Watch it work
             </span>
-            Watch it work
           </a>
         </div>
       </section>
@@ -734,8 +744,12 @@ export default function CargoLanding() {
                 Works the same from a script or a browser
               </li>
             </ul>
-            <a href="#" className="btn-ghost">
-              Read the SDK docs →
+            <a
+              href="/docs"
+              className="group inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 transition hover:text-orange-500"
+            >
+              Read the SDK docs
+              <span className="transition-transform group-hover:translate-x-0.5">→</span>
             </a>
           </div>
 
@@ -814,12 +828,6 @@ export default function CargoLanding() {
                 <li>
                   <a href="#showcase">Watch it work</a>
                 </li>
-                <li>
-                  <a href="#">Pricing</a>
-                </li>
-                <li>
-                  <a href="#">Changelog</a>
-                </li>
               </ul>
             </div>
 
@@ -830,13 +838,13 @@ export default function CargoLanding() {
                   <a href="/docs">Docs</a>
                 </li>
                 <li>
-                  <a href="#">SDK reference</a>
-                </li>
-                <li>
-                  <a href="#">Status</a>
-                </li>
-                <li>
-                  <a href="#">GitHub</a>
+                  <a
+                    href="https://www.npmjs.com/package/uploadaura-sdk"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    SDK reference
+                  </a>
                 </li>
               </ul>
             </div>
@@ -845,13 +853,7 @@ export default function CargoLanding() {
               <h4>Company</h4>
               <ul>
                 <li>
-                  <a href="#">About</a>
-                </li>
-                <li>
                   <a href="#faq">FAQ</a>
-                </li>
-                <li>
-                  <a href="#">Contact</a>
                 </li>
                 <li>
                   <a href="/privacy">Privacy &amp; Policy</a>
@@ -880,19 +882,14 @@ export default function CargoLanding() {
                 Built on Amazon S3
               </span>
               <div className="footer-social">
-                <a href="#" aria-label="GitHub">
+                <a
+                  href="https://github.com/muhammadyaqoobmuet/uploadAura-S3wrapper"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub"
+                >
                   <svg viewBox="0 0 24 24">
                     <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
-                  </svg>
-                </a>
-                <a href="#" aria-label="Twitter / X">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M4 4l16 16M20 4L4 20" />
-                  </svg>
-                </a>
-                <a href="#" aria-label="Status">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M13 2 3 14h8l-1 8 11-14h-9l1-6z" />
                   </svg>
                 </a>
               </div>
@@ -1301,22 +1298,6 @@ export default function CargoLanding() {
           margin: 0 6px;
           transform: translateY(-4px);
         }
-        .hero h1 .inline-icon > * {
-          animation: float 4s ease-in-out infinite;
-        }
-        .hero h1 .inline-icon:nth-of-type(2) > * {
-          animation-delay: -2s;
-        }
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(-4px);
-          }
-          50% {
-            transform: translateY(-8px);
-          }
-        }
-
         .icon-s3 {
           width: 72px;
           height: 72px;
@@ -1407,15 +1388,6 @@ export default function CargoLanding() {
           flex-shrink: 0;
           position: relative;
           z-index: 1;
-        }
-        .btn-ghost .ghost-chevron {
-          width: 13px;
-          height: 13px;
-          flex-shrink: 0;
-          transition: transform 0.22s ease;
-        }
-        .btn-ghost:hover .ghost-chevron {
-          transform: translateX(3px);
         }
         /* Social proof stats */
         .hero-stats {
@@ -1549,24 +1521,6 @@ export default function CargoLanding() {
           position: relative;
           z-index: 1;
         }
-        .btn-ghost {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          font-size: 14px;
-          color: var(--muted);
-          border-bottom: 1px solid var(--border-2);
-          padding-bottom: 3px;
-          font-weight: 500;
-          transition:
-            color 0.2s,
-            border-color 0.2s;
-        }
-        .btn-ghost:hover {
-          color: var(--ink);
-          border-color: var(--ink);
-        }
-
         /* ============ STAGE ============ */
         .stage {
           position: relative;
@@ -3414,6 +3368,6 @@ export default function CargoLanding() {
           filter: brightness(1.05);
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 }

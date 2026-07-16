@@ -233,9 +233,7 @@ function EmptyState({ filtered }: { filtered: boolean }) {
             transition={{ delay: 0.2, duration: 0.4 }}
           >
             <p className="text-[14px] font-medium text-[var(--color-ink)]">
-              {filtered
-                ? "No files match your search"
-                : "Your canvas awaits ✨"}
+              {filtered ? "No files match your search" : "Your canvas awaits "}
             </p>
             <p className="mt-0.5 text-[12px] text-[var(--color-ink-faint)]">
               {filtered

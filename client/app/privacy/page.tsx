@@ -1,12 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
-
-export const metadata: Metadata = {
-  title: "Privacy & Policy",
-  description:
-    "How UploadAura stores, protects, and handles your files and account data.",
-};
 
 const SECTIONS = [
   {
@@ -62,6 +58,10 @@ const SECTIONS = [
 ];
 
 export default function PrivacyPage() {
+  useEffect(() => {
+    document.title = "Privacy & Policy — UploadAura";
+  }, []);
+
   return (
     <div className="privacy-page">
       <header className="privacy-header">

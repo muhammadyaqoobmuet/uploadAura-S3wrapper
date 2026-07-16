@@ -27,10 +27,12 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
                     );
                 }
 
+                const navItem = item as NavItemType;
+
                 if (item.items?.length) {
                     return (
                         <details key={item.label} open={activeItem?.href === item.href} className="appearance-none py-0.25">
-                            <NavItemBase href={item.href} badge={item.badge} icon={item.icon} type="collapsible">
+                            <NavItemBase href={navItem.href} badge={navItem.badge} icon={navItem.icon} type="collapsible">
                                 {item.label}
                             </NavItemBase>
 
@@ -56,7 +58,7 @@ export const NavList = ({ activeUrl, items, className }: NavListProps) => {
 
                 return (
                     <li key={item.label} className="py-px">
-                        <NavItemBase type="link" badge={item.badge} icon={item.icon} href={item.href} current={activeUrl === item.href}>
+                        <NavItemBase type="link" badge={navItem.badge} icon={navItem.icon} href={navItem.href} current={activeUrl === item.href}>
                             {item.label}
                         </NavItemBase>
                     </li>

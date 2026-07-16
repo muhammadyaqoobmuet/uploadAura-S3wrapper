@@ -71,7 +71,7 @@ export const NavItemBase = ({ current, type, badge, href, icon: Icon, children, 
 
     if (type === "collapsible") {
         return (
-            <summary className={cx("p-2", styles.root, current && styles.rootSelected)} onClick={onClick}>
+            <summary className={cx("p-2", styles, current && "bg-secondary hover:bg-secondary_hover")} onClick={onClick}>
                 {iconElement}
 
                 {labelElement}
@@ -89,7 +89,7 @@ export const NavItemBase = ({ current, type, badge, href, icon: Icon, children, 
                 href={href!}
                 target={isExternal ? "_blank" : "_self"}
                 rel="noopener noreferrer"
-                className={cx("py-2 pr-3 pl-10", styles.root, current && styles.rootSelected)}
+                className={cx("py-2 pr-3 pl-10", styles, current && "bg-secondary hover:bg-secondary_hover")}
                 onClick={onClick}
                 aria-current={current ? "page" : undefined}
             >
@@ -105,7 +105,7 @@ export const NavItemBase = ({ current, type, badge, href, icon: Icon, children, 
             href={href!}
             target={isExternal ? "_blank" : "_self"}
             rel="noopener noreferrer"
-            className={cx("group/item p-2", styles.root, current && styles.rootSelected)}
+            className={cx("group/item p-2", styles, current && "bg-secondary hover:bg-secondary_hover")}
             onClick={onClick}
             aria-current={current ? "page" : undefined}
         >

@@ -4,10 +4,10 @@ import type { FC, ReactElement, ReactNode } from "react";
 import React, { isValidElement } from "react";
 import type { ButtonProps as AriaButtonProps, LinkProps as AriaLinkProps } from "react-aria-components";
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
-import { cx, sortCx } from "@/utils/cx";
+import { cx } from "@/utils/cx";
 import { isReactComponent } from "@/utils/is-react-component";
 
-export const styles = sortCx({
+export const styles = {
     common: {
         root: [
             "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-100 ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
@@ -128,7 +128,7 @@ export const styles = sortCx({
             ].join(" "),
         },
     },
-});
+};
 
 /**
  * Common props shared between button and anchor variants
@@ -172,25 +172,26 @@ export type Props = ButtonProps | LinkProps;
 export const Button: {
     (props: LinkProps): ReactElement<LinkProps>;
     (props: ButtonProps): ReactElement<ButtonProps>;
-} = ({
-    size = "sm",
-    color = "primary",
-    children,
-    className,
-    noTextPadding,
-    iconLeading: IconLeading,
-    iconTrailing: IconTrailing,
-    isDisabled: disabled,
-    isLoading: loading,
-    showTextWhileLoading,
-    ...props
-}) => {
+} = ((props: any) => {
+    const {
+        size = "sm",
+        color = "primary",
+        children,
+        className,
+        noTextPadding: noTextPaddingInit,
+        iconLeading: IconLeading,
+        iconTrailing: IconTrailing,
+        isDisabled: disabled,
+        isLoading: loading,
+        showTextWhileLoading,
+        ...rest
+    } = props;
     const href = "href" in props ? props.href : undefined;
 
     const isIcon = (IconLeading || IconTrailing) && !children;
     const isLinkType = ["link-gray", "link-color", "link-destructive"].includes(color);
 
-    noTextPadding = isLinkType || noTextPadding;
+    const noTextPadding = isLinkType || noTextPaddingInit;
 
     const commonChildren = (
         <>
@@ -236,7 +237,7 @@ export const Button: {
     const commonProps = {
         "data-loading": loading ? true : undefined,
         "data-icon-only": isIcon ? true : undefined,
-        ...props,
+        ...rest,
         isDisabled: disabled,
         className: cx(
             styles.common.root,
@@ -251,9 +252,12 @@ export const Button: {
         children: commonChildren,
     };
 
-    if ("href" in commonProps) {
+    if ("href" in rest) {
         return <AriaLink {...commonProps} href={disabled ? undefined : href} />;
     }
 
     return <AriaButton {...commonProps} type={commonProps.type || "button"} isPending={loading} />;
+}) as {
+    (props: LinkProps): ReactElement<LinkProps>;
+    (props: ButtonProps): ReactElement<ButtonProps>;
 };
