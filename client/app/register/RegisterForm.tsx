@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { ApiError, registerUser } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 // ─── Pre-computed confetti (avoids Math.random in render) ────────────────────
 
@@ -34,17 +35,6 @@ const itemVariants = {
     },
   },
 };
-
-// ─── Logo mark ────────────────────────────────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <span className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1a1a1a,#0a0a0a)] shadow-[0_1px_4px_rgba(0,0,0,0.22),inset_0_0_0_1px_rgba(255,255,255,0.07)]">
-      <span className="absolute size-[18px] rounded-full border-[1.5px] border-[#FF603D] shadow-[0_0_6px_rgba(255,96,61,0.45)]" />
-      <span className="absolute size-[5px] rounded-full bg-[#FF603D] shadow-[0_0_5px_rgba(255,96,61,0.85)]" />
-    </span>
-  );
-}
 
 // ─── Password field ──────────────────────────────────────────────────────────
 
@@ -152,7 +142,7 @@ function SuccessView({
       >
         <header className="auth-header">
           <span className="auth-logo">
-            <LogoMark /> UploadAura
+            <BrandLogo className="h-6 w-auto" />
           </span>
         </header>
 
@@ -368,8 +358,7 @@ export function RegisterForm() {
       <div className="auth-form-panel">
         <header className="auth-header">
           <Link href="/" className="auth-logo">
-            <LogoMark />
-            Upload<span style={{ color: "var(--color-accent)" }}>Aura</span>
+            <BrandLogo className="h-6 w-auto" />
           </Link>
           <Link href="/login" className="auth-nav-link">
             Sign in

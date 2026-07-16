@@ -1,0 +1,182 @@
+WRITER CLONE SYSTEM — DETAILED OPERATING GUIDE
+For use in Grok (or any chat model) to convert AI-written essays into your personal writing style
+=====================================================================
+
+HOW TO USE THIS FILE
+=====================================================================
+This is not a one-line prompt. It is a full operating manual you paste into Grok (or any
+chat model) at the start of a session. It tells the model exactly how to behave across
+five phases. Paste this entire file as your first message. Then, in the SAME chat:
+
+  Message 2: paste your 3-4 handwritten essays (label them ESSAY 1, ESSAY 2, etc.)
+  Message 3: paste the AI-written draft you want converted
+  Message 4 onward: say "continue to next phase" or "revise using your own feedback"
+
+The model must treat this as a strict rulebook, not a suggestion. Every rule below exists
+because generic "write this in my style" prompts fail in predictable ways — they shorten
+content, flatten your voice into generic AI-safe phrasing, or lose your actual arguments.
+This guide closes those gaps one at a time.
+
+=====================================================================
+NON-NEGOTIABLE RULE #1: LENGTH AND CONTENT PRESERVATION
+=====================================================================
+This is the single most important rule and it must be repeated to the model if it drifts.
+
+- The rewritten output's word count must land within 10% of the original AI draft's word
+  count. If the original is 1000 words, output between 900 and 1100 words. Never produce
+  a "tightened summary" version.
+- Every distinct point, example, claim, statistic, and sub-argument in the original must
+  appear in the rewrite. Nothing gets dropped for the sake of brevity. If the original
+  spends a paragraph on an example, the rewrite spends a comparable paragraph on it —
+  reworded in your voice, not compressed into a sentence.
+- The model is explicitly forbidden from "cleaning up" the essay by removing repetition,
+  cutting transitional sentences, or merging paragraphs unless YOUR sample essays show
+  that you naturally write that tight. Match your density, not generic editorial instinct.
+- If the model believes a section is redundant, it must flag this to you in a separate
+  note AFTER producing the full-length rewrite — never silently cut it.
+- Before finalizing, the model must do a word-count check and report it: "Original: X
+  words. Rewrite: Y words." If Y is outside the 10% band, it must revise before showing
+  you the final version.
+
+=====================================================================
+PHASE 1 — STYLE DNA EXTRACTION (run once per session, before any rewriting)
+=====================================================================
+Give the model your 3-4 essays and this instruction: analyze them and build a structured
+"Style Profile" — not a vague description like "casual and direct," but a concrete, checkable
+profile covering:
+
+1. SENTENCE STRUCTURE
+   - Average sentence length and how much it varies (do you mix short punchy sentences
+     with long developing ones, or stay uniform?)
+   - How you open sentences — do you start with "I", with the subject, with a conditional
+     ("If X, then..."), or with a connector?
+   - How you handle complex ideas — one long sentence with clauses, or broken into
+     several short ones?
+
+2. VOCABULARY AND WORD CHOICE
+   - Formality level (casual/conversational vs formal/academic)
+   - Words and phrases you repeat often (your verbal fingerprints)
+   - Words you clearly avoid (if your essays never use certain generic AI-style words
+     like "delve," "moreover," "in today's world," "furthermore," note that explicitly
+     as a DO NOT USE list)
+   - Technical vs plain language balance
+
+3. TRANSITIONS AND FLOW
+   - Do you use formal transition words (however, therefore, additionally) or do you
+     just start the next sentence/paragraph directly?
+   - How do you move between ideas — abrupt jumps, or explicit bridges?
+
+4. PUNCTUATION HABITS
+   - Em-dashes, semicolons, colons — do you use them, and how often?
+   - Do you use rhetorical questions? Parenthetical asides?
+   - Sentence fragments for emphasis?
+
+5. PARAGRAPH SHAPE
+   - Short punchy paragraphs vs longer developing ones
+   - Do you lead paragraphs with a topic sentence, or build up to the point?
+
+6. OPENING AND CLOSING PATTERNS
+   - How do your essays typically start (a claim, a story, a question, context-setting)?
+   - How do they end (a summary, a call to action, an open question, a punchy final line)?
+
+7. TONE AND PERSONALITY MARKERS
+   - Confidence level (assertive vs hedging language like "I think," "perhaps," "it seems")
+   - Humor, sarcasm, or directness
+   - First-person presence — how much do you insert "I" and personal opinion versus
+     staying neutral/objective?
+
+8. WHAT YOU NEVER DO
+   - This is as important as what you do. List generic AI patterns your writing avoids:
+     listy "firstly, secondly, thirdly" structures, excessive hedging, overly balanced
+     "on the one hand / on the other hand" framing, or generic motivational closings.
+
+Output of this phase: a structured Style Profile (bullet list or short JSON-like block) that
+gets referenced in every phase after this. Tell the model to keep this Style Profile visible
+and re-check against it at every later step — it should not "forget" it after phase 1.
+
+=====================================================================
+PHASE 2 — CHUNKING THE AI DRAFT
+=====================================================================
+Before rewriting, the model should break the AI-written draft into logical sections
+(introduction, each main argument/point, conclusion) rather than rewriting the whole
+thing in one pass. This matters for two reasons: it forces the model to preserve every
+sub-point (ties back to Rule #1), and it makes revision easier — you can ask for
+"redo section 3" without regenerating the whole essay.
+
+Instruct the model to list out the sections it identified before rewriting anything, so
+you can confirm nothing is being merged or skipped.
+
+=====================================================================
+PHASE 3 — SECTION-BY-SECTION REWRITE
+=====================================================================
+For each chunk identified in Phase 2, the model rewrites it applying the Style Profile,
+under these constraints:
+- Preserve every fact, claim, and example from that section — do not condense.
+- Match sentence length variation and paragraph shape from the Style Profile, not the
+  original AI draft's rhythm.
+- Replace generic/AI-flavored vocabulary with your actual vocabulary patterns from the
+  Style Profile's DO NOT USE list.
+- Keep the same logical order of points as the original — do not reorganize the
+  argument structure unless it is factually broken.
+- Match your first-person presence level. If your essays are personal/opinionated,
+  the rewrite should sound like you're arguing it, not reporting it neutrally.
+
+The model should output each rewritten section labeled clearly, so you can spot which
+part needs more work.
+
+=====================================================================
+PHASE 4 — SELF-EVALUATION AND REVISION LOOP
+=====================================================================
+After producing the full first-pass rewrite, instruct the model to critique its own
+output against the Style Profile, section by section, answering explicitly:
+- Where does this still sound generic or "AI-written" rather than like the sample essays?
+- Which sentences are too uniform in length compared to your natural variation?
+- Are there any leftover AI-tell phrases (see list below)?
+- Does the word count still match the original within 10%?
+
+Wherever the self-critique finds a mismatch, the model revises that section immediately
+— do not just report problems, fix them, then re-report the word count.
+
+Repeat this loop up to 2-3 times per section if needed. If after 3 rounds a section still
+doesn't match, flag it to you directly and ask for a specific correction instead of
+silently guessing.
+
+=====================================================================
+PHASE 5 — FINAL PASS: STITCHING AND AI-TELL REMOVAL
+=====================================================================
+Once every section passes self-evaluation, the model does one full read-through of the
+entire assembled essay (not section by section) to catch:
+- Awkward transitions between sections that were rewritten independently
+- Repeated phrases that got reused across multiple sections
+- Voice drift — does section 4 still sound like the same person as section 1?
+- A final AI-tell sweep. Common patterns to hunt down and eliminate:
+  * "In today's fast-paced world..."
+  * "It is important to note that..."
+  * Overuse of "moreover," "furthermore," "additionally" as connectors
+  * Overly balanced "on one hand / on the other hand" framing when your essays are
+    more direct/opinionated
+  * Generic motivational closings ("In conclusion, we must all strive to...")
+  * Excessive hedging ("it could be argued that," "some might say")
+  * Perfectly uniform sentence lengths (a dead giveaway of AI generation)
+
+After this pass, the model reports the final word count one more time to confirm it is
+still within the 10% band of the original.
+
+=====================================================================
+QUICK-START PROMPT SEQUENCE FOR GROK
+=====================================================================
+Message 1: This entire file.
+Message 2: "Here are my 3-4 sample essays. Build the Style Profile as described in Phase 1."
+Message 3: "Here is the AI-written draft. Run Phase 2 (chunking) and show me the sections
+            you identified before rewriting anything."
+Message 4: "Proceed with Phase 3 — rewrite each section using the Style Profile. Remember
+            Rule #1: no shortening, match my word count within 10%."
+Message 5: "Now run Phase 4 — self-critique each section against the Style Profile and
+            revise anything that doesn't match."
+Message 6: "Run Phase 5 — stitch it all together, remove AI-tell phrases, and give me
+            the final word count compared to the original."
+
+If at any point the output feels off, don't ask for a full regeneration — point to the
+specific section and specific issue (e.g. "section 3 is 40% shorter than the original,
+fix that first") so the model corrects surgically instead of rewriting everything.
+=====================================================================

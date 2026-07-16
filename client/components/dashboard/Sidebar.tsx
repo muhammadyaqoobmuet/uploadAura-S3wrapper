@@ -9,6 +9,7 @@ import { LayoutGrid, BarChart2, Key, LogOut, X } from "lucide-react";
 import { useAuth } from "@/providers/AuthProvider";
 import { StorageBar } from "./StorageBar";
 import { cn } from "@/lib/utils";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 // ─── Nav config ───────────────────────────────────────────────────────────────
 
@@ -87,15 +88,9 @@ export function Sidebar({ mobileOpen = false, onMobileClose }: SidebarProps) {
           <Link
             href="/dashboard"
             onClick={onMobileClose}
-            className="flex items-center gap-2.5"
+            className="flex items-center"
           >
-            <div className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1a1a1a,#0a0a0a)] shadow-[0_1px_4px_rgba(0,0,0,0.22),inset_0_0_0_1px_rgba(255,255,255,0.07)]">
-              <div className="absolute size-[18px] rounded-full border-[1.5px] border-[#FF603D] shadow-[0_0_6px_rgba(255,96,61,0.45)]" />
-              <div className="absolute size-[5px] rounded-full bg-[#FF603D] shadow-[0_0_5px_rgba(255,96,61,0.85)]" />
-            </div>
-            <span className="font-mono text-[13.5px] font-semibold tracking-tight text-white">
-              Upload<span className="">Aura</span>
-            </span>
+            <BrandLogo className="h-7 w-auto" />
           </Link>
 
           {/* Mobile close */}

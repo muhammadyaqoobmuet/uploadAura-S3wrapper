@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  allowedDevOrigins: ["192.168.100.17"],
   images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       // Local backend (development)
       { protocol: "http", hostname: "localhost" },

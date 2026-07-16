@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/Input";
 import { ApiError, loginUser } from "@/lib/api";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/Toast";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { cn } from "@/lib/utils";
 
 // ─── Stagger variants ─────────────────────────────────────────────────────────
@@ -98,15 +99,6 @@ interface FieldErrors {
 }
 
 // ─── Logo mark ────────────────────────────────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <div className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#1a1a1a,#0a0a0a)] shadow-[0_1px_4px_rgba(0,0,0,0.22),inset_0_0_0_1px_rgba(255,255,255,0.07)]">
-      <div className="absolute size-[18px] rounded-full border-[1.5px] border-[#FF603D] shadow-[0_0_6px_rgba(255,96,61,0.45)]" />
-      <div className="absolute size-[5px] rounded-full bg-[#FF603D] shadow-[0_0_5px_rgba(255,96,61,0.85)]" />
-    </div>
-  );
-}
 
 // ─── Photo visual panel ──────────────────────────────────────────────────────
 
@@ -220,8 +212,7 @@ export function LoginForm() {
         {/* Header */}
         <header className="auth-header">
           <Link href="/" className="auth-logo">
-            <LogoMark />
-            Upload<span className="text-(--color-accent)">Aura</span>
+            <BrandLogo className="h-6 w-auto" />
           </Link>
           <Link href="/register" className="auth-nav-link">
             Sign up

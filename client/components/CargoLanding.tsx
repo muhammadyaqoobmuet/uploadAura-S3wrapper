@@ -7,6 +7,7 @@ import { LayoutGrid } from "lucide-react";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { useAuth } from "@/providers/AuthProvider";
 import Image from "next/image";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 /**
  * Cargo landing page — Next.js component
@@ -41,12 +42,16 @@ const FAQS = [
     a: "A wrapper. Your files live in your own S3 bucket — Cargo just gives you one API and SDK instead of raw AWS calls, IAM policies, and bucket configuration.",
   },
   {
-    q: "Do I need an AWS account first?",
-    a: "No. Cargo provisions and manages the underlying bucket for you on the free tier. On Pro plans you can also connect your own AWS account if you want direct ownership.",
+    q: "Do I need an AWS console account?",
+    a: "No. Cargo provisions and manages the underlying bucket for you, so you never have to open the AWS console, create IAM users, or touch bucket settings.",
   },
   {
-    q: "What happens if I go over 2GB?",
-    a: "Uploads past the free limit are paused, not deleted. You'll get a notice with a one-click upgrade — nothing you've already stored is ever removed.",
+    q: "What's the file size limit?",
+    a: "You can upload files up to 50 MB each through the standard endpoint. Larger files are split into parts automatically by the SDK and reassembled on the server.",
+  },
+  {
+    q: "Is the SDK TypeScript compatible?",
+    a: "Yes. The Node SDK is written in TypeScript with full type definitions shipped in the package, so you get autocomplete and compile-time checks out of the box.",
   },
   {
     q: "Which languages does the SDK support?",
@@ -55,6 +60,14 @@ const FAQS = [
   {
     q: "Can I make uploaded files private?",
     a: "Yes — every file defaults to a public URL, but you can flip a file or an entire folder to private and issue short-lived signed links instead.",
+  },
+  {
+    q: "How long do my files stay available?",
+    a: "Forever, as long as your account is active. We never expire or garbage-collect stored files, and public URLs keep working indefinitely unless you explicitly delete the object.",
+  },
+  {
+    q: "What do you do with my data?",
+    a: "Nothing extra. Files are stored in the bucket tied to your account and served back exactly as uploaded. We never train on, scan the contents of, or resell your files. See our Privacy & Policy for the full breakdown.",
   },
 ];
 
@@ -144,12 +157,7 @@ export default function CargoLanding() {
             transition: "padding 0.45s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
-          <div className="logo">
-            <div className="logo-icon"></div>
-            <span>
-              Upload<span style={{ color: "var(--accent)" }}>Aura</span>
-            </span>
-          </div>
+          <BrandLogo className="h-10 w-auto" />
           <ul className="nav-links">
             <li>
               <a href="#plan">Product</a>
@@ -787,10 +795,7 @@ export default function CargoLanding() {
         <div className="wrap footer-inner">
           <div className="footer-grid">
             <div className="footer-brand">
-              <div className="logo">
-                <div className="logo-icon"></div>
-                <span>UploadAura</span>
-              </div>
+              <BrandLogo className="h-10 w-auto" />
               <p className="footer-tagline">
                 A thin, typed layer over Amazon S3 — one key, every file.
               </p>
@@ -847,6 +852,9 @@ export default function CargoLanding() {
                 </li>
                 <li>
                   <a href="#">Contact</a>
+                </li>
+                <li>
+                  <a href="/privacy">Privacy &amp; Policy</a>
                 </li>
               </ul>
             </div>

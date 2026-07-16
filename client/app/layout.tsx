@@ -26,6 +26,9 @@ export const metadata: Metadata = {
   description:
     "Upload, manage, and share your files with speed and simplicity. 2&nbsp;GB free storage, API access, and real-time analytics.",
   robots: { index: true, follow: true },
+  icons: {
+    icon: "/logomain_final.ico",
+  },
 };
 
 export const viewport: Viewport = {

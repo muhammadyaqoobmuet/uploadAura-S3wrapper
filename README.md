@@ -214,35 +214,46 @@ Content-Type: application/json
 ### File Upload (Authenticated)
 
 ```bash
-# Upload file via dashboard API
-POST /api/internal/files/upload
+# Upload file via dashboard API (field name: files)
+POST /api/files/upload
 Authorization: Bearer <your-jwt-token>
 Content-Type: multipart/form-data
 
-file: <binary-file-data>
+files: <binary-file-data>
 ```
 
 ### Public API (API Key)
 
 ```bash
-# Upload via API key
-POST /api/v1/files/upload
-X-API-KEY: <your-api-key>
+# Upload via API key (field name: files)
+POST /api/v1/upload
+Authorization: Bearer <your-api-key>
 Content-Type: multipart/form-data
 
-file: <binary-file-data>
+files: <binary-file-data>
 
 # Response
 {
-  "success": true,
-  "data": {
-    "fileUrl": "https://uploadaura-files.s3.amazonaws.com/abc123.png",
-    "fileName": "screenshot.png",
-    "fileSize": 1048576,
-    "mimeType": "image/png"
+  "results": {
+    "message": "uploaded successfully 1 out of 1 files ",
+    "data": [
+      {
+        "fileId": "6a579538ca367101353ccc88",
+        "originalName": "screenshot.png",
+        "size": 1048576,
+        "ext": "png",
+        "mimeType": "image/png",
+        "url": "https://uploadaurabackend.yaqoobhalepoto.dev/files/6a579538ca367101353ccc88/view"
+      }
+    ],
+    "failedCount": "no failed count all uploaded successfully !"
   }
 }
 ```
+
+The `url` is a public, viewable link to the file (streamed inline). Prefer the
+[`uploadaura-sdk`](./sdk/README.md) package — it handles auth, multipart, and
+returns the `url` for you.
 
 ### API Key Management
 
