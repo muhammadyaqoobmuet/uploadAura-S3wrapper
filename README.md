@@ -1,4 +1,4 @@
-# 🌲 UploadAura
+# UploadAura
 
 <div align="center">
 
@@ -14,19 +14,20 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 [![AWS S3](https://img.shields.io/badge/AWS_S3-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/s3/)
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 
-[Live Demo](https://uploadaura.dev](https://uploadaura.yaqoobhalepoto.dev/) • [Documentation](#-documentation) • [API Reference](#-api-reference) • [Contributing](#-contributing)
+[Live Demo](https://uploadaura.yaqoobhalepoto.dev/) • [Documentation](#documentation) • [API Reference](#api-reference) • [Contributing](#contributing)
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
 <table>
 <tr>
 <td width="50%">
 
-### 🚀 **Developer First**
+### Developer First
+
 - Clean REST API with JWT authentication
 - API key management built-in
 - TypeScript throughout for type safety
@@ -35,7 +36,8 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 </td>
 <td width="50%">
 
-### 🎨 **Beautiful Dashboard**
+### Beautiful Dashboard
+
 - Drag-and-drop file uploads
 - Real-time storage analytics
 - Inline file previews (images, PDFs, videos)
@@ -46,7 +48,8 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 <tr>
 <td>
 
-### 🔐 **Secure by Default**
+### Secure by Default
+
 - Google OAuth 2.0 integration
 - JWT + refresh token system
 - API key hashing with bcrypt
@@ -55,7 +58,8 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 </td>
 <td>
 
-### ⚡ **Production Ready**
+### Production Ready
+
 - AWS S3 integration for reliable storage
 - Winston logging with daily rotation
 - Zod validation on all inputs
@@ -67,14 +71,14 @@ Skip AWS S3 buckets, IAM policies, and endless configuration. UploadAura gives y
 
 ---
 
-## 🎯 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-- **Node.js** 18+ and npm/yarn
-- **PostgreSQL** database
-- **AWS S3** bucket with access keys
-- **Google OAuth** credentials (optional)
+- Node.js 18+ and npm/yarn
+- PostgreSQL database
+- AWS S3 bucket with access keys
+- Google OAuth credentials (optional)
 
 ### Installation
 
@@ -113,11 +117,11 @@ cd client
 npm run dev
 ```
 
-🎉 **Open [http://localhost:3000](http://localhost:3000)** and start uploading!
+Open [http://localhost:3000](http://localhost:3000) and start uploading.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 uploadaura/
@@ -143,12 +147,12 @@ uploadaura/
 │   │   └── ui/                # Button, Badge, Modal
 │   └── providers/             # AuthProvider, ToastProvider
 │
-└── README.md                   # You are here! 👋
+└── README.md
 ```
 
 ---
 
-## 🔑 Environment Variables
+## Environment Variables
 
 ### Backend `.env`
 
@@ -184,7 +188,7 @@ NEXT_PUBLIC_API_URL="http://localhost:5000/api"
 
 ---
 
-## 📚 API Reference
+## API Reference
 
 ### Authentication
 
@@ -235,7 +239,7 @@ files: <binary-file-data>
 # Response
 {
   "results": {
-    "message": "uploaded successfully 1 out of 1 files ",
+    "message": "uploaded successfully 1 out of 1 files",
     "data": [
       {
         "fileId": "6a579538ca367101353ccc88",
@@ -246,7 +250,7 @@ files: <binary-file-data>
         "url": "https://uploadaurabackend.yaqoobhalepoto.dev/files/6a579538ca367101353ccc88/view"
       }
     ],
-    "failedCount": "no failed count all uploaded successfully !"
+    "failedCount": "no failed count all uploaded successfully"
   }
 }
 ```
@@ -278,9 +282,10 @@ Authorization: Bearer <your-jwt-token>
 
 ---
 
-## 🎨 Tech Stack
+## Tech Stack
 
 ### Backend
+
 - **Runtime:** Node.js 18+ with TypeScript
 - **Framework:** Express.js with async error handling
 - **Database:** PostgreSQL + Prisma ORM
@@ -291,6 +296,7 @@ Authorization: Bearer <your-jwt-token>
 - **File Handling:** Multer (multipart/form-data)
 
 ### Frontend
+
 - **Framework:** Next.js 15 (App Router)
 - **Language:** TypeScript
 - **Styling:** CSS Variables + Custom Design System
@@ -300,6 +306,7 @@ Authorization: Bearer <your-jwt-token>
 - **State Management:** React Context (AuthProvider)
 
 ### DevOps
+
 - **Version Control:** Git with conventional commits
 - **Code Formatting:** Prettier
 - **Process Manager:** Nodemon (development)
@@ -307,7 +314,7 @@ Authorization: Bearer <your-jwt-token>
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### Backend (Railway / Render)
 
@@ -315,7 +322,7 @@ Authorization: Bearer <your-jwt-token>
 2. Connect to Railway or Render
 3. Set environment variables in dashboard
 4. Run migrations: `npx prisma migrate deploy`
-5. Deploy! 🎉
+5. Deploy
 
 ### Client (Vercel)
 
@@ -326,9 +333,9 @@ Authorization: Bearer <your-jwt-token>
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions! Here's how you can help:
+Contributions are welcome. Here's how to help:
 
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
@@ -338,7 +345,7 @@ We welcome contributions! Here's how you can help:
 
 ### Commit Convention
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
+This project follows [Conventional Commits](https://www.conventionalcommits.org/):
 
 - `feat:` New features
 - `fix:` Bug fixes
@@ -351,11 +358,12 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
-## 📝 Documentation
+## Documentation
 
 ### Available Scripts
 
 **Backend:**
+
 ```bash
 npm run dev          # Start development server with nodemon
 npm run build        # Compile TypeScript
@@ -365,6 +373,7 @@ npm run prisma:studio # Open Prisma Studio GUI
 ```
 
 **Client:**
+
 ```bash
 npm run dev          # Start Next.js dev server
 npm run build        # Build for production
@@ -374,7 +383,7 @@ npm run lint         # Run ESLint
 
 ---
 
-## 📊 Project Stats
+## Project Stats
 
 - **Lines of Code:** ~15,000+
 - **Components:** 30+ React components
@@ -385,34 +394,24 @@ npm run lint         # Run ESLint
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- [Next.js](https://nextjs.org/) for the amazing React framework
-- [Framer Motion](https://www.framer.com/motion/) for beautiful animations
+- [Next.js](https://nextjs.org/) for the React framework
+- [Framer Motion](https://www.framer.com/motion/) for animations
 - [Prisma](https://www.prisma.io/) for type-safe database access
 - [AWS S3](https://aws.amazon.com/s3/) for reliable object storage
 - [Lucide](https://lucide.dev/) for clean, consistent icons
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📬 Contact
+## Contact
 
-**Muhammad Yaqoob** - [@muhammadyaqoobmuet](https://github.com/muhammadyaqoobmuet)
+**Muhammad Yaqoob** — [@muhammadyaqoobmuet](https://github.com/muhammadyaqoobmuet)
 
 **Project Link:** [https://github.com/muhammadyaqoobmuet/uploadAura-S3wrapper](https://github.com/muhammadyaqoobmuet/uploadAura-S3wrapper)
-
----
-
-<div align="center">
-
-### ⭐ Star this repo if you found it helpful!
-
-Made with ❤️ by developers, for developers.
-
-</div>
