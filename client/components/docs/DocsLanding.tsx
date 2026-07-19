@@ -17,6 +17,9 @@ import {
   Terminal,
   Zap,
   ShieldCheck,
+  MessageCircle,
+  Send,
+  X,
 } from "lucide-react";
 import CodeBlock from "./CodeBlock";
 import { BrandLogo } from "@/components/brand/BrandLogo";
@@ -132,6 +135,86 @@ export default function DocsLanding() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // ── Docs AI chat ───────────────────────────────────────────────
+  const CHAT_MAX_WORDS = 700;
+  const CHAT_WARN_WORDS = 500;
+  const countWords = (t: string) =>
+    t.trim() ? t.trim().split(/\s+/).length : 0;
+
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const [chatMessages, setChatMessages] = useState<
+    { role: "user" | "ai"; text: string }[]
+  >([]);
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatBodyRef = useRef<HTMLDivElement>(null);
+  const chatWords = countWords(chatInput);
+  const chatOverLimit = chatWords > CHAT_MAX_WORDS;
+
+  useEffect(() => {
+    chatBodyRef.current?.scrollTo({
+      top: chatBodyRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [chatMessages]);
+
+  const askAI = async () => {
+    const question = chatInput.trim();
+    if (!question || chatLoading || chatOverLimit) return;
+    setChatInput("");
+    setChatMessages((m) => [...m, { role: "user", text: question }, { role: "ai", text: "" }]);
+    setChatLoading(true);
+
+    // The chat API lives on the separate backend server, not Next.js itself.
+    const base = process.env.NEXT_PUBLIC_API_URL ?? "";
+    const url = base ? `${base.replace(/\/$/, "")}/ai/chat` : "/api/ai/chat";
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setChatMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = {
+            role: "ai",
+            text: data?.error ?? "Sorry — the docs assistant is unavailable right now.",
+          };
+          return copy;
+        });
+        return;
+      }
+      if (!res.body) throw new Error("no stream");
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = "";
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setChatMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { role: "ai", text: acc };
+          return copy;
+        });
+      }
+    } catch {
+      setChatMessages((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = {
+          role: "ai",
+          text: "Sorry — the docs assistant is unavailable right now.",
+        };
+        return copy;
+      });
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   const onSidebarClick = (id: string) => {
     const el = document.getElementById(id);
@@ -567,6 +650,84 @@ export default function DocsLanding() {
           </div>
         </div>
       )}
+
+      {/* ── Docs AI chat widget ─────────────────────────────────── */}
+      <div className="doc-ai">
+        {chatOpen ? (
+          <div className="doc-ai-panel">
+            <div className="doc-ai-head">
+              <span className="doc-ai-title">
+                <MessageCircle size={15} strokeWidth={2} />
+                Ask the docs
+              </span>
+              <button
+                type="button"
+                className="doc-ai-close"
+                onClick={() => setChatOpen(false)}
+                aria-label="Close chat"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="doc-ai-body" ref={chatBodyRef}>
+              {chatMessages.length === 0 && (
+                <p className="doc-ai-empty">
+                  Ask anything about the UploadAura SDK — installation, file
+                  sources, errors, frameworks, and more.
+                </p>
+              )}
+              {chatMessages.map((m, i) => (
+                <div key={i} className={`doc-ai-msg doc-ai-${m.role}`}>
+                  {m.text || (m.role === "ai" && chatLoading ? "…" : "")}
+                </div>
+              ))}
+            </div>
+
+            <div className="doc-ai-input">
+              <textarea
+                className="doc-ai-textarea"
+                rows={1}
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    askAI();
+                  }
+                }}
+                placeholder="Ask a question…"
+              />
+              <button
+                type="button"
+                onClick={askAI}
+                disabled={chatLoading || !chatInput.trim() || chatOverLimit}
+                aria-label="Send"
+              >
+                <Send size={15} />
+              </button>
+            </div>
+            <div
+              className={`doc-ai-count${
+                chatOverLimit ? " is-over" : chatWords > CHAT_WARN_WORDS ? " is-warn" : ""
+              }`}
+            >
+              {chatOverLimit
+                ? `Too long by ${chatWords - CHAT_MAX_WORDS} words — trim to ${CHAT_MAX_WORDS}.`
+                : `${chatWords} / ${CHAT_MAX_WORDS} words`}
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="doc-ai-fab"
+            onClick={() => setChatOpen(true)}
+            aria-label="Open docs assistant"
+          >
+            <MessageCircle size={20} strokeWidth={2} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

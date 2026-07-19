@@ -529,3 +529,169 @@
 .doc-search-result:hover { background: var(--c-subtle); }
 .doc-search-result-title { font-weight: 600; }
 .doc-search-result-go { color: var(--c-faint); }
+
+/* ── Docs AI chat widget ─────────────────────────────────────── */
+.doc-ai {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 60;
+}
+.doc-ai-fab {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+  background: var(--c-fg);
+  color: var(--c-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.doc-ai-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+.doc-ai-panel {
+  width: min(380px, calc(100vw - 36px));
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+}
+.doc-ai-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--c-border);
+}
+.doc-ai-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.doc-ai-close {
+  border: none;
+  background: none;
+  color: var(--c-mut);
+  cursor: pointer;
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 8px;
+}
+.doc-ai-close:hover {
+  background: var(--c-subtle);
+  color: var(--c-fg);
+}
+.doc-ai-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.doc-ai-empty {
+  color: var(--c-faint);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.doc-ai-msg {
+  max-width: 85%;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.doc-ai-user {
+  align-self: flex-end;
+  background: var(--c-fg);
+  color: var(--c-bg);
+  border-bottom-right-radius: 4px;
+}
+.doc-ai-ai {
+  align-self: flex-start;
+  background: var(--c-subtle);
+  color: var(--c-fg);
+  border-bottom-left-radius: 4px;
+}
+.doc-ai-input {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--c-border);
+}
+.doc-ai-input input {
+  flex: 1;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 13.5px;
+  font-family: inherit;
+  background: var(--c-bg);
+  color: var(--c-fg);
+  outline: none;
+}
+.doc-ai-input input:focus {
+  border-color: var(--c-fg);
+}
+.doc-ai-input button {
+  border: none;
+  background: var(--c-fg);
+  color: var(--c-bg);
+  width: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+.doc-ai-input button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.doc-ai-textarea {
+  flex: 1;
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 13.5px;
+  font-family: inherit;
+  background: var(--c-bg);
+  color: var(--c-fg);
+  outline: none;
+  resize: none;
+  line-height: 1.5;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.doc-ai-textarea:focus {
+  border-color: var(--c-fg);
+}
+.doc-ai-count {
+  padding: 0 14px 10px;
+  font-size: 11.5px;
+  color: var(--c-faint);
+  text-align: right;
+}
+.doc-ai-count.is-warn {
+  color: #b7791f;
+}
+.doc-ai-count.is-over {
+  color: #d64545;
+  font-weight: 600;
+}
