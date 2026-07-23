@@ -2,6 +2,8 @@
 
 import "./docs.css";
 import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Manrope, JetBrains_Mono } from "next/font/google";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -679,7 +681,12 @@ export default function DocsLanding() {
               )}
               {chatMessages.map((m, i) => (
                 <div key={i} className={`doc-ai-msg doc-ai-${m.role}`}>
-                  {m.text || (m.role === "ai" && chatLoading ? "…" : "")}
+                  {m.role === "ai" ? (
+                    <Markdown remarkPlugins={[remarkGfm]}>{m.text}</Markdown>
+                  ) : (
+                    m.text
+                  )}
+                  {!m.text && m.role === "ai" && chatLoading ? "…" : ""}
                 </div>
               ))}
             </div>

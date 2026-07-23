@@ -391,6 +391,8 @@
   .doc-title { font-size: 34px; }
   .doc-search span { display: none; }
   .doc-constraints { grid-template-columns: 1fr; }
+  .doc-ai { top: 12px; bottom: auto; }
+  .doc-ai-panel { height: calc(100dvh - 24px); }
 }
 
 /* Code block (Shiki) — glass panel with an accent top border */
@@ -626,6 +628,54 @@
   background: var(--c-subtle);
   color: var(--c-fg);
   border-bottom-left-radius: 4px;
+}
+.doc-ai-ai p { margin: 0 0 8px; }
+.doc-ai-ai p:last-child { margin-bottom: 0; }
+.doc-ai-ai pre {
+  background: var(--c-code-bg);
+  border: 1px solid var(--c-code-border);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+.doc-ai-ai pre code {
+  font-family: var(--font-doc-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--c-code-fg);
+}
+.doc-ai-ai code {
+  font-family: var(--font-doc-mono), monospace;
+  font-size: 0.86em;
+  background: var(--c-subtle-2);
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--c-fg);
+}
+.doc-ai-ai ul, .doc-ai-ai ol {
+  margin: 6px 0;
+  padding-left: 20px;
+}
+.doc-ai-ai li {
+  margin: 2px 0;
+  line-height: 1.55;
+}
+.doc-ai-ai a {
+  color: var(--c-fg);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.doc-ai-ai strong { font-weight: 650; }
+.doc-ai-ai blockquote {
+  border-left: 3px solid var(--c-border);
+  padding-left: 10px;
+  margin: 8px 0;
+  color: var(--c-mut);
 }
 .doc-ai-input {
   display: flex;
